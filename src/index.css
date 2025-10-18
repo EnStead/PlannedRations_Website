@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Define your theme directly in CSS */
+@theme {
+  --color-brand-primary: #151515;
+  --color-brand-secondary: #9E78F6;
+  --color-brand-accent: #F7EAD7;
+  --color-brand-background1: #FAF8FE;
+  --color-brand-muted: #797979;
+  --color-brand-head: #151515;
+  --color-brand-subtext: #333333;
+  --color-brand-offwhite: #F5F5F5;
+  --color-brand-cartext: #797979;
+  --color-brand-carhead: #FFFFFF;
+  --color-brand-planoff: #EAEAEA;
+  --color-brand-midtext: #F9A720;
+  --color-brand-planmid: #B2B2B2;
+  --color-brand-planbut: #C2ABF9;
+  --color-brand-plan2: #D5C4FB;
+  --color-brand-plan3: #76B1FF;
+  --color-brand-plan4: #74C460;
+  --color-brand-footnoti: #101828;
+  --color-brand-footnoti1: #667085;
+  --color-brand-cardhead: #000000;
+  --color-brand-orange: #EE542B;
+  --color-brand-purple: #7B61FF;
+  --color-brand-darkpurple: #3F3062;
+  --color-brand-grey: #667085;
+  --color-brand-gray: #101828;
+  --color-brand-placeholder: #B2B2B2;
+  --color-brand-offpurple: #1F1731;
+  --color-brand-charcoal: #222222;
+  
+
+  --font-sans: "DM Sans", sans-serif;
+  --font-heading: "Frank Ruhl Libre", serif;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 6px 16px rgba(0, 0, 0, 0.1);
+
+  --breakpoint-ssm: 445px;
+  --breakpoint-xsm: 545px;
+  --breakpoint-ml: 845px;
+  --breakpoint-ls: 945px;
+  --breakpoint-lss: 1100px;
+  --breakpoint-xls: 1200px;
+  /* --breakpoint-2xl: 100rem;
+  --breakpoint-3xl: 120rem; */
+
+
+}
+
+@layer base {
+  body {
+    @apply font-sans;
+  }
+}
+
+/* In your global CSS file (e.g. index.css or globals.css) */
+.custom-pagination .swiper-pagination-bullet {
+  @apply w-2 h-2 bg-brand-carhead rounded-full transition-all duration-300;
+}
+
+.custom-pagination .swiper-pagination-bullet-active {
+  @apply w-6 h-2 bg-brand-plan2 rounded-full;
+}
+
