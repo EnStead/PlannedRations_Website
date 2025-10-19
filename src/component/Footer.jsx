@@ -7,8 +7,8 @@ import Instagram from '../assets/Instagram.svg'
 import Facebook from '../assets/Facebook.svg'
 import Youtube from '../assets/Youtube.svg'
 
-
 import { useState } from "react";
+import axios from "axios";
 import { Link } from 'react-router-dom'
 
 
@@ -36,10 +36,52 @@ const Footer = ({Footerbg, LeftCard, Cursor,Tooltip}) => {
 
     const [isHovering, setIsHovering] = useState(false);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    
 
     const handleMouseMove = (e) => {
     setMousePos({ x: e.clientX, y: e.clientY });
     };
+
+
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState({ type: "", message: "" });
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+
+    // Reset previous alert
+    setAlert({ type: "", message: "" });
+
+    if (!email.trim()) {
+      setAlert({ type: "error", message: "Please enter a valid email address." });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        "https://api.plannedrations.com/api/web/newsletter/subscribe",
+        { email }
+      );
+
+      // Assuming success if status is 200
+      if (res.status === 200) {
+        setAlert({ type: "success", message: "✅ You’ve successfully subscribed!" });
+        setEmail("");
+      }
+    } catch (error) {
+      console.error("Subscription error:", error);
+      setAlert({
+        type: "error",
+        message:
+          error.response?.data?.message ||
+          "❌ Something went wrong. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
 
@@ -141,18 +183,36 @@ const Footer = ({Footerbg, LeftCard, Cursor,Tooltip}) => {
                         <p className="font-sans text-brand-grey  font-normal mb-6 sm:mb-12">
                             Stay up to date with the latest news, announcements, and articles.
                         </p>
-                        <div className="flex flex-wrap items-center gap-3 w-full max-w-md">
+                        <form
+                            onSubmit={handleSubscribe}
+                            className="flex flex-wrap items-center gap-3 w-full max-w-md"
+                        >
                             <input
-                                type="email"
-                                placeholder="Enter your email"
-                                className="flex-1 px-4 py-3 rounded-full border
-                                text-brand-placeholder border-gray-300 focus:outline-none 
-                                focus:ring-2 focus:ring-brand-primary"
+                            type="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="flex-1 px-4 py-3 rounded-full border text-brand-head border-gray-300 
+                            focus:outline-none focus:ring-2 focus:ring-brand-primary"
                             />
-                            <button className="px-6 py-3 rounded-full bg-brand-secondary text-white font-bold">
-                                Subscribe
+                            <button
+                            type="submit"
+                            disabled={loading}
+                            className="px-6 py-3 rounded-full bg-brand-secondary text-white font-bold disabled:opacity-50"
+                            >
+                            {loading ? "Subscribing..." : "Subscribe"}
                             </button>
-                        </div>
+                        </form>
+
+                        {alert.message && (
+                            <p
+                            className={`mt-3 text-sm font-medium ${
+                                alert.type === "success" ? "text-green-600" : "text-red-600"
+                            }`}
+                            >
+                            {alert.message}
+                            </p>
+                        )}
                     </div>
                 </div>
 
