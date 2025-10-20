@@ -11,9 +11,9 @@ const MealPlanDeets = () => {
       
       {/* Left Side */} 
       <div className=" ml:max-w-md flex-1 flex items-center justify-start px-7 xsm:px-15  ">
-        <div className=" ml:max-w-md md:text-left px-0 xsm:px-6">
+        <div className=" ml:max-w-md md:text-left px-0 xsm:px-0">
           <h2 className="font-heading font-bold text-3xl sm:text-5xl text-brand-cardhead mb-4">
-            Try Our 2-Week <span className='text-brand-midtext'>Meal Plan</span> for Free
+            Try Our 10-Days <span className='text-brand-midtext'>Meal Plan</span> for Free
           </h2>
           <p className="font-sans text-brand-subtext font-normal text-lg sm:text-2xl  mb-6">
             Get a meal plan tailored to your lifestyle. Whether for workouts, family, or a student budget—we’ve got you.

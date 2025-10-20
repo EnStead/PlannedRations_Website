@@ -42,13 +42,14 @@ const Navbar = ({isScrolled, setIsScrolled, forceFixed}) => {
     <nav
       className={`w-full transition-all duration-500 z-50 font-sans ${
         isScrolled || forceFixed
-          ? " ml:max-w-[1400px] fixed top-3 bg-brand-carhead shadow h-22 rounded-[48px] max-w-[700px] mx-auto left-0 right-0   "
+          ? " ml:max-w-[1400px] fixed top-3 bg-brand-carhead/90 shadow h-22 rounded-[48px] max-w-[700px] mx-auto left-0 right-0   "
           : "relative bg-transparent h-20" 
       }`}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
         <img src={Logo} alt='Logo' onClick={() => navigate("/")} className="cursor-pointer" />
-        <ul className={`hidden gap-7 text-sm ml:flex sm:text-xs lg:gap-10 font-normal py-4 px-5 rounded-2xl lg:text-base transition-all duration-300
+        {/* HIDEN SECTION */}
+        {/* <ul className={`hidden gap-7 text-sm ml:flex sm:text-xs lg:gap-10 font-normal py-4 px-5 rounded-2xl lg:text-base transition-all duration-300
             ${isScrolled ? "bg-transparent" : "bg-brand-carhead text-brand-subtext"}
           `}
         >
@@ -58,9 +59,10 @@ const Navbar = ({isScrolled, setIsScrolled, forceFixed}) => {
           <li className="cursor-pointer" onClick={() => handleScrollTo("faq")} >FAQ</li>
           <li className="cursor-pointer" onClick={() => navigate("/blog")} >Blogs</li>
           <li className="cursor-pointer" onClick={() => navigate("/contact")} >Contact Us</li>
-        </ul>
-        <button className="bg-brand-secondary text-white px-10 py-4 rounded-2xl font-medium text-sm">
-          Download App
+        </ul> */}
+        <button onClick={() => navigate("/contact")} className="bg-brand-secondary text-white px-10 py-4 rounded-2xl font-medium text-sm cursor-pointer">
+          {/* Download App */}
+          Contact Us
         </button>
       </div>
     </nav>

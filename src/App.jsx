@@ -39,7 +39,7 @@ function App() {
         <Route
           path="/"
           element={
-            <div className="bg-brand-accent min-h-screen'">
+            <div className="bg-brand-accent min-h-screen">
               <Layout 
                 isScrolled={isScrolled} 
                 setIsScrolled={setIsScrolled} 
@@ -47,6 +47,7 @@ function App() {
                 LeftCard='#76B1FF' 
                 Cursors={Cursor} 
                 Tooltip='#F9A720' 
+                showFooter={false}
               >
                 <LandingPage isScrolled={isScrolled} setIsScrolled={setIsScrolled} />
               </Layout>
@@ -63,6 +64,8 @@ function App() {
               LeftCard='#F9A720'
               Cursors={BlogCursor} 
               Tooltip='#9E78F6'  
+              showFooter={false}
+
             >
               <Blog />
             </Layout>
@@ -77,6 +80,8 @@ function App() {
               Cursors={BlogCursor} 
               Tooltip='#9E78F6' 
               forceFixed={true} 
+              showFooter={false}
+
             >
               <BlogPostSection />
             </Layout>
@@ -113,16 +118,20 @@ function App() {
         <Route
           path="/contact"
           element={
-            <Layout 
-              isScrolled={isScrolled} 
-              setIsScrolled={setIsScrolled} 
-              Footerbg={BlogFooterbg} 
-              LeftCard='#F9A720' 
-              Cursors={BlogCursor} 
-              Tooltip='#9E78F6' 
-            >
-              <ContactPage />
-            </Layout>
+            <div className="bg-brand-background1">
+              <Layout 
+                isScrolled={isScrolled} 
+                setIsScrolled={setIsScrolled} 
+                Footerbg={BlogFooterbg} 
+                LeftCard='#F9A720' 
+                Cursors={BlogCursor} 
+                Tooltip='#9E78F6' 
+                showFooter={false}
+
+              >
+                <ContactPage />
+              </Layout>             
+            </div>
           }
         />
       </Routes>

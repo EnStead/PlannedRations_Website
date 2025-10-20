@@ -188,12 +188,12 @@ const Footer = ({Footerbg, LeftCard, Cursor,Tooltip}) => {
                             className="flex flex-wrap items-center gap-3 w-full max-w-md"
                         >
                             <input
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="flex-1 px-4 py-3 rounded-full border text-brand-head border-gray-300 
-                            focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                                type="email"
+                                placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="flex-1 px-4 py-3 rounded-full border text-brand-head border-gray-300 
+                                focus:outline-none focus:ring-2 focus:ring-brand-primary"
                             />
                             <button
                             type="submit"

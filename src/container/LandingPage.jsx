@@ -6,27 +6,30 @@ import TestimonialSection from '../component/TestimonialSection'
 import PricingSection from '../component/PricingSection'
 import FAQSection from '../component/FAQSection'
 import StoreSection from '../component/StoreSection'
-// import Footer from '../component/Footer'
-// import Footerbg from '../assets/Footerbg.jpg'
-// import Cursor from '../assets/Cursor.svg'
+import HeroPageMisc from '../Utility/HeroPageMisc'
+
 
 
 const LandingPage = ({isScrolled, setIsScrolled }) => {
   return (
     <div>
-        <HeroPage isScrolled={isScrolled} setIsScrolled={setIsScrolled} />
+        <HeroPageMisc/>
+        
+        {/* HIDEN SECTION*/}
+
+
+        {/* <HeroPage isScrolled={isScrolled} setIsScrolled={setIsScrolled} />
         <StepSection />
-        <CarouselSection />
+        <CarouselSection /> */}
         <MealPlanSection/>
-        <TestimonialSection/>
+        {/* <TestimonialSection/>
         <div className='bg-brand-carhead'>
           <PricingSection  />
-        </div>
-        <FAQSection  />
+        </div> */}
+        {/* <FAQSection  />
         <div className='bg-brand-carhead'>
           <StoreSection/>
-        </div>
-        {/* <Footer Footerbg={Footerbg} LeftCard='#76B1FF' Cursor={Cursor} Tooltip='#F9A720' /> */}
+        </div> */}
 
     </div>
   )
