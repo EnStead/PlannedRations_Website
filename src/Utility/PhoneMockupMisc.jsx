@@ -5,7 +5,7 @@ const PhoneMockupMisc = () => {
   return (
     <div className = {`flex justify-center items-center max-h-screen `}>
         <div 
-            className={` z-10 absolute transition-all duration-700 ease-in-out pb-20 bottom-[-200px] xsm:bottom-[-170px] sm:bottom-[-250px] rotate-[-12deg]`} 
+            className={` z-10 absolute transition-all duration-700 ease-in-out pb-20 bottom-[-250px] ssm:bottom-[-200px] xsm:bottom-[-170px] sm:bottom-[-250px] md:bottom-[-320px] rotate-[-12deg]`} 
         >
             <Tilt
                 glareEnable={true}
@@ -16,7 +16,8 @@ const PhoneMockupMisc = () => {
                 tiltMaxAngleY={20}
                 className="      
                     mx-auto 
-                    w-[550px]      
+                    w-[500px]
+                    ssm:w-[550px]      
                     sm:w-[650px]  
                 "
             >

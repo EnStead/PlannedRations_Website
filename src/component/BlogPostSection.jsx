@@ -1,6 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import blogPosts from "../Utility/BlogData";
-import Facebook from "../assets/BlogFacebook.svg"
+import Facebook from "../assets/Blogfacebook.svg"
 import BlogLink from "../assets/Bloglink.svg"
 import Linkedin from "../assets/Bloglinkedin.svg"
 import Twitter from "../assets/Blogtwitter.svg"
