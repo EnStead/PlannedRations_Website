@@ -73,4 +73,7 @@
 }
 
 
+.prose img[alt="image"] {
+  height: 700px;
+}
 

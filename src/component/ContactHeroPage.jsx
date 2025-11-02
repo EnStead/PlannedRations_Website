@@ -27,7 +27,7 @@ const ContactHeroPage = () => {
                     Speak to our friendly team
                 </p>
                 <p className="text-brand-midtext underline italic xsm:text-lg lg:text-xl">
-                    support@plannedration.com
+                    support@plannedrations.com
                 </p>
             </div>
 
@@ -55,7 +55,7 @@ const ContactHeroPage = () => {
                     Speak to our sales experts
                 </p>
                 <p className="text-brand-midtext underline italic xsm:text-lg lg:text-xl">
-                    sales@plannedration.com
+                    sales@plannedrations.com
                 </p>
             </div>
 

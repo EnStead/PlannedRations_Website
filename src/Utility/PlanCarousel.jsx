@@ -61,11 +61,11 @@ const PlanCarousel = () => {
                     <div className="flex items-center gap-2 w-fit">
                         {/* Image */}
                         <div>
-                        <img
-                            src={diet.src}
-                            alt={diet.alt}
-                            className="w-8 h-full object-cover"
-                        />
+                            <img
+                                src={diet.src}
+                                alt={diet.alt}
+                                className="w-8 h-full object-cover"
+                            />
                         </div>
 
                         {/* Text */}

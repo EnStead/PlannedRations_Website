@@ -17,7 +17,7 @@ const BlogPageHeroSection = ({searchQuery,setSearchQuery}) => {
         <div className="mt-8 flex justify-center gap-2">
             <input
                 type="text"
-                placeholder="Find releveant blog topics..."
+                placeholder="Find relevant blog topics..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full max-w-md px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand-secondary"

@@ -105,7 +105,7 @@ const BlogPostSection = () => {
         <div className="md:col-span-2">
           <div
             className="prose prose-headings:font-heading prose-a:text-brand-midtext prose-a:underline prose-ul:text-brand-head"
-            dangerouslySetInnerHTML={{ __html: post.content_html }}
+            dangerouslySetInnerHTML={{ __html: post.contentHtml }}
           ></div>
         </div>
 
