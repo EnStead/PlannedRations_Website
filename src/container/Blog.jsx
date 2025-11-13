@@ -10,14 +10,14 @@ import BlogPagePostSection from '../component/BlogPagePostSection';
 
 const Blog = () => {
 
-    const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div>
-        {/* <Navbar isScrolled={isScrolled} setIsScrolled={setIsScrolled} /> */}
-        <BlogPageHeroSection setSearchQuery={setSearchQuery} searchQuery={searchQuery} />
-        <BlogPagePostSection searchQuery={searchQuery} />
-        {/* <Footer Footerbg={BlogFooterbg} LeftCard='#F9A720' Cursor={BlogCursor} Tooltip='#9E78F6'/> */}
+      {/* <Navbar isScrolled={isScrolled} setIsScrolled={setIsScrolled} /> */}
+      <BlogPageHeroSection setSearchQuery={setSearchQuery} searchQuery={searchQuery} />
+      <BlogPagePostSection searchQuery={searchQuery} />
+      {/* <Footer Footerbg={BlogFooterbg} LeftCard='#F9A720' Cursor={BlogCursor} Tooltip='#9E78F6'/> */}
     </div>
   )
 }

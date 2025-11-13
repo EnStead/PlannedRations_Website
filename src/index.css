@@ -33,6 +33,7 @@
   --color-brand-placeholder: #B2B2B2;
   --color-brand-offpurple: #1F1731;
   --color-brand-charcoal: #222222;
+  --color-brand-purp: #E7DEFC;
   
 
   --font-sans: "DM Sans", sans-serif;
@@ -75,5 +76,17 @@
 
 .prose img[alt="image"] {
   height: 700px;
+}
+
+input:not(:placeholder-shown),
+textarea:not(:placeholder-shown),
+select:not(:invalid) {
+  border-color: black;
+}
+
+input,
+textarea,
+select {
+  transition: border-color 0.3s ease;
 }
 

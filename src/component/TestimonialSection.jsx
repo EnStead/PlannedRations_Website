@@ -50,9 +50,9 @@ const TestimonialSection = () => {
     const [isWide, setIsWide] = useState(window.innerWidth > 845);
 
     useEffect(() => {
-    const handleResize = () => setIsWide(window.innerWidth > 845);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+        const handleResize = () => setIsWide(window.innerWidth > 845);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
 
