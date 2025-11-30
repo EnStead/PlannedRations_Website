@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Vector from '../assets/Vector.svg'
 
-const CustomSelect = ({ label, options, value, onChange }) => {
+const CustomSelect = ({ label, options, value, onChange,classNameLabel, classNameSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleRef = useRef(null);
   const listRef = useRef(null);
@@ -35,10 +35,10 @@ const CustomSelect = ({ label, options, value, onChange }) => {
 
   return (
     <div className="relative w-full">
-      <label className="mb-1 font-medium text-brand-cartext block">{label}</label>
+      <label className={`mb-1 font-medium ${classNameLabel} block`}>{label}</label>
       <div
         ref={toggleRef}
-        className="border border-brand-planoff rounded-full px-4 py-3 cursor-pointer flex justify-between items-center"
+        className={`border border-brand-planoff ${classNameSelect} rounded-full px-4 py-3 cursor-pointer flex justify-between items-center`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{value || "Select"}</span>
@@ -60,15 +60,26 @@ const CustomSelect = ({ label, options, value, onChange }) => {
               WebkitOverflowScrolling: "touch"
             }}
           >
-            {options.map((option) => (
-              <li
-                key={option}
-                className="px-4 py-3 hover:bg-brand-secondary hover:text-white cursor-pointer rounded-md"
-                onClick={() => handleSelect(option)}
-              >
-                {option}
-              </li>
-            ))}
+            {options.map((option) => {
+              const [title, example] = option.split("Eg:");
+              
+              return (
+                <li
+                  key={option}
+                  className="px-4 py-3 hover:bg-brand-secondary hover:text-white cursor-pointer rounded-md"
+                  onClick={() => handleSelect(option)}
+                >
+                  <span className="font-medium block">{title.trim()}</span>
+
+                  {example && (
+                    <span className="block text-xs text-gray-500 mt-1">
+                      Eg: {example.trim()}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+
           </ul>,
           document.body
         )}

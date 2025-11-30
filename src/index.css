@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -34,10 +35,19 @@
   --color-brand-offpurple: #1F1731;
   --color-brand-charcoal: #222222;
   --color-brand-purp: #E7DEFC;
+  --color-brand-purpbg: #B091F7;
+  --color-brand-red: #F04D3E;
+  --color-brand-step: #7E60C4;
+  --color-brand-cloud: #53389E;
+  --color-brand-purUp: #6941C6;
+
+
+
   
 
   --font-sans: "DM Sans", sans-serif;
   --font-heading: "Frank Ruhl Libre", serif;
+  --font-dash: "Parkinsans", serif;
 
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
@@ -61,6 +71,9 @@
 @layer base {
   body {
     @apply font-sans;
+  }
+  button {
+    @apply cursor-pointer;
   }
 }
 

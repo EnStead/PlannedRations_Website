@@ -15,6 +15,10 @@ import ContactPage from "./container/ContactPage";
 import Privacy from "./container/Privacy";
 import Terms from "./container/Terms";
 import ScrollToTop from "./Utility/ScrollToTop";
+import AdminRoute from "./container/AdminDashboard/AdminRoute";
+import AdminDashboard from "./container/AdminDashboard/AdminComponents/AdminDashboard";
+import { DashboardProvider } from './container/AdminDashboard/Context/DashboardContext'
+
 
 
 function App() {
@@ -54,6 +58,19 @@ function App() {
             </div>
           }
         />
+
+        {/* <Route
+          path="/admin/*"
+          element={
+            <AdminRoute>
+              <DashboardProvider>
+                <AdminDashboard isScrolled={isScrolled}/>
+              </DashboardProvider>
+            </AdminRoute>
+          }
+        /> */}
+
+
         <Route
           path="/blog"
           element={
