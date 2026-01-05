@@ -15,9 +15,9 @@ import ContactPage from "./container/ContactPage";
 import Privacy from "./container/Privacy";
 import Terms from "./container/Terms";
 import ScrollToTop from "./Utility/ScrollToTop";
-import AdminRoute from "./container/AdminDashboard/AdminRoute";
-import AdminDashboard from "./container/AdminDashboard/AdminComponents/AdminDashboard";
-import { DashboardProvider } from './container/AdminDashboard/Context/DashboardContext'
+import { AuthProvider } from "./AdminDashboard/Context/AuthContext";
+import { ToastProvider } from "./AdminDashboard/Context/ToastProvider";
+import AdminDashboard from "./AdminDashboard/AdminComponents/AdminDashboard";
 
 
 
@@ -59,16 +59,17 @@ function App() {
           }
         />
 
-        {/* <Route
+        <Route
           path="/admin/*"
           element={
-            <AdminRoute>
-              <DashboardProvider>
-                <AdminDashboard isScrolled={isScrolled}/>
-              </DashboardProvider>
-            </AdminRoute>
+            <AuthProvider>
+              <ToastProvider>
+                <AdminDashboard isScrolled={isScrolled} />
+              </ToastProvider>
+            </AuthProvider>
           }
-        /> */}
+        />
+
 
 
         <Route

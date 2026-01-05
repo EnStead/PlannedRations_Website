@@ -4,11 +4,11 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/',
   plugins: [
     react({
       babel: {
         plugins: [['babel-plugin-react-compiler']],
-        base: '/PlannedRations_Website/',
       },
     }),
     tailwindcss(),

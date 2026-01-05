@@ -91,15 +91,24 @@
   height: 700px;
 }
 
-input:not(:placeholder-shown),
+/* input:not(:placeholder-shown),
 textarea:not(:placeholder-shown),
 select:not(:invalid) {
   border-color: black;
-}
+} */
 
-input,
+/* input,
 textarea,
 select {
   transition: border-color 0.3s ease;
+} */
+
+
+/* Hide scrollbar but keep scroll functionality */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
 }
 
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}

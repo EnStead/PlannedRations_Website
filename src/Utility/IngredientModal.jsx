@@ -1,5 +1,14 @@
-import { useState } from 'react';
-import CustomSelect from './CustomSelect';
+import * as Dialog from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import CustomSelect from "./CustomSelect";
+
+const emptyForm = {
+  name: "",
+  category: "",
+  default_unit: "",
+  description: "",
+};
 
 const IngredientModal = ({
   open,
@@ -7,102 +16,151 @@ const IngredientModal = ({
   initialValues,
   onClose,
   onSubmit,
+  loading = false
 }) => {
+  const [form, setForm] = useState(emptyForm);
 
-  const [form, setForm] = useState(initialValues || {
-    ingredient: "",
-    category: "",
-    defaultUnit: "",
-    usedIn: "",
-    description: ""
-  });
+  // sync edit values
+  useEffect(() => {
+    if (mode === "edit" && initialValues) {
+      setForm({
+        name: initialValues.name ?? "",
+        category: initialValues.category ?? "",
+        default_unit: initialValues.default_unit ?? "",
+        description: initialValues.description ?? "",
+      });
+    } else {
+      setForm(emptyForm);
+    }
+  }, [mode, initialValues]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(form);
-  };  
+  };
 
+  return (
+    <Dialog.Root open={open} onOpenChange={onClose}>
+      <Dialog.Portal>
+        {/* Overlay */}
+        <Dialog.Overlay className="fixed inset-0 bg-black/30 z-40" />
 
-  return open ? (
-    <div onClick={onClose}  className="fixed inset-0 bg-black/20 flex items-center justify-center">
-      <form className="bg-white rounded-xl p-6 w-[500px] relative" onSubmit={handleSubmit}>
+        {/* Modal */}
+        <Dialog.Content className="fixed z-50 top-1/2 left-1/2 w-[500px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl p-6 shadow-lg">
+          
+          <Dialog.Title className="text-xl text-center font-dash font-medium mb-1">
+            {mode === "add" ? "Add Ingredient" : "Edit Ingredient"}
+          </Dialog.Title>
 
-        <button
-            onClick={() => setIsOpen(false)}
-            className="absolute top-4 right-4 text-black  py-1 px-3  z-10 cursor-pointer text-4xl font-semibold"
-        >
-            ×
-        </button>
-        <h2 className="text-xl text-center font-medium mb-1 text-brand-cardhead">
-          {mode === "add" ? "Add Ingredient" : "Edit Ingredient"}
-        </h2>
-        <p className='font-light text-center text-brand-subtext mb-4' >
-            Add ingredient to your library
-        </p>
+          <Dialog.DialogDescription className="font-light text-brand-subtext text-center" >
+            {mode === "add" ? "Add ingredient to your library" : "Edit your ingredient"}
+          </Dialog.DialogDescription>
 
-        {/* Ingredient */}
-        <div className="flex flex-col">
-            <label htmlFor="ingredient" className={`mb-1 font-medium transition text-brand-cartext
-                ${form.ingredient?.trim() !== "" ? "text-brand-primary" : "text-brand-cartext"}
-            `}
-            > 
-                Ingredient Name
-            </label>
-            <input
-            id="ingredient"
-            type="text"
-            name="ingredient"
-            placeholder="Eg; Rice, Pasta, Tomato Puree"
-            value={form.ingredient}
-            // onChange={handleChange}
-            className="border border-brand-planoff rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-planoff"
-            />
-        </div>
+          <Dialog.Close asChild>
+            <button className="absolute top-4 right-4 text-gray-500 hover:text-black">
+              <X />
+            </button>
+          </Dialog.Close>
 
-        {/* Selects side by side */}
-        <div className="flex flex-col sm:flex-row gap-4 my-4">
-            <CustomSelect
+          <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+            {/* Name */}
+            <div className="flex flex-col">
+              <label className={`mb-1 font-medium ${form.name?.trim() !== "" ? "text-brand-primary" : "text-brand-muted"}`}>Ingredient Name</label>
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                className={`${form.name?.trim() !== "" ? "border-brand-planoff border" : "border-brand-primary border"} border rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-brand-primary`}
+                required
+              />
+            </div>
+
+            {/* Selects */}
+            <div className="flex gap-4">
+              <CustomSelect
                 label="Category"
-                classNameLabel={form.category ? "text-black" : "text-brand-cartext"}
-                options={["Bulk/Base Eg: rice, pasta, potatoes, veg, stock, water, meats", "Seasonings Eg: salt, chiles, spicy pastes", "Aromatics Eg: garlic, ginger, fresh herbs","Acids / Bitters Eg: lemon juice, vinegar", "Sugars Eg: honey in dressings", "Fats Eg: butter, oil", "Leaveners (baking) Eg: baking powder/soda", "Units Eg: eggs, bouillon cubes", "Alcohols Eg: wine, spirits", "Heat-dependent Eg: chiles, pepper"]}
+                classNameLabel={form.preference ? "text-brand-primary" : "text-brand-muted"}
                 value={form.category}
-                // onChange={(val) => setForm({ ...form, how_you_heard: val })}
-            />
+                options={[
+                  "Bulk/Base",
+                  "Seasonings",
+                  "Aromatics",
+                  "Acids / Bitters",
+                  "Sugars",
+                  "Fats",
+                  "Units",
+                  "Alcohols",
+                  "Heat-dependent",
+                ]}
+                onChange={(val) =>
+                  setForm((prev) => ({ ...prev, category: val }))
+                }
+              />
 
-            <CustomSelect
-            label="Default Unit"
-            classNameLabel={form.defaultUnit ? "text-black" : "text-brand-cartext"}
-            options={["gram (g)", "milliliters (ml)", "tablespoon (tbsp)", "teaspoon (tsp)", "pieces (pcs)", "cups (cps)"]}
-            value={form.defaultUnit}
-            // onChange={(val) => setForm({ ...form, goal_type: val })}
-            />
-        </div>
+              <CustomSelect
+                label="Default Unit"
+                value={form.default_unit}
+                options={[
+                  "gram (g)",
+                  "milliliters (ml)",
+                  "tablespoon (tbsp)",
+                  "teaspoon (tsp)",
+                  "pieces (pcs)",
+                  "cups (cps)",
+                ]}
+                onChange={(val) =>
+                  setForm((prev) => ({ ...prev, default_unit: val }))
+                }
+              />
+            </div>
 
-        {/* Description */}
-        <div className="flex flex-col sm:col-span-2">
-            <label  className={`mb-1 font-medium transition text-brand-cartext
-                ${form.description?.trim() !== "" ? "text-brand-primary" : "text-brand-cartext"}
-            `}>
+            {/* Description */}
+            <div className="flex flex-col">
+              <label className={`mb-1 font-medium ${form.description?.trim() !== "" ? "text-brand-primary" : "text-brand-muted"}`}>
                 Short Description (Optional)
-            
-            </label>
-            <textarea
+              </label>
+              <textarea
                 name="description"
                 value={form.description}
-                // onChange={handleChange}
+                onChange={handleChange}
                 rows={4}
-                placeholder="Type Tips or description of ingredient..."
-                className=" border border-brand-planoff px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand-planoff resize-none"
-            />
-        </div>
-        
+                className="border border-b-brand-gray px-4 py-3 focus:outline-none focus:ring-1 focus:ring-brand-gray rounded-2xl resize-none"
+              />
+            </div>
 
-        <button type="submit" className="bg-brand-secondary w-full text-white px-6 py-2 mt-8 rounded-full">
-          {mode === "add" ? "Save Ingredient" : "Update Ingredient"}
-        </button>
-      </form>
-    </div>
-  ) : null;
-}
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-2 rounded-full mt-4 flex items-center justify-center gap-2
+                ${loading
+                  ? "bg-brand-secondary/60 cursor-not-allowed"
+                  : "bg-brand-secondary hover:opacity-90"}
+                text-white transition`}
+            >
+              {loading && (
+                <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              )}
 
-export default IngredientModal
+              {loading
+                ? mode === "add"
+                  ? "Saving..."
+                  : "Updating..."
+                : mode === "add"
+                ? "Save Ingredient"
+                : "Update Ingredient"}
+            </button>
+
+          </form>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+};
+
+export default IngredientModal;

@@ -1,10 +1,29 @@
-import Logo from '../../../assets/Logo.svg'
-import Avater from '../../../assets/Avater.jpg'
-import Logout from '../../../assets/Logout.svg'
-import { NavLink } from 'react-router-dom'
+import Logo from '../../assets/Logo.svg'
+import Avater from '../../assets/Avater.jpg'
+import Logout from '../../assets/Logout.svg'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../Context/AuthContext'
+import { useToast } from '../Context/ToastProvider'
 
 
 const AdminNavbar = ({isScrolled}) => {
+
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const { showToast } = useToast();
+
+    const handleLogout = () => {
+    logout();
+
+    showToast({
+      title: "Logged out",
+      description: "You have been logged out successfully",
+      variant: "success",
+    });
+
+    navigate("/admin");
+  };
+
   return (
     <nav
       className={`w-full transition-all duration-500 z-50 font-sans px-10 ${
@@ -20,8 +39,8 @@ const AdminNavbar = ({isScrolled}) => {
         >
           {[
             { to: "/admin/dashboard", label: "Dashboard" },
-            { to: "/admin/management", label: "User Management" },
-            { to: "/admin/blogs", label: "Blogs & Article" },
+            { to: "/admin/users", label: "User Management" },
+            { to: "/admin/posts", label: "Blogs & Article" },
             { to: "/admin/recipes", label: "Recipes" },
             { to: "/admin/ingredients", label: "Ingredients" },
           ].map((item) => (
@@ -42,10 +61,10 @@ const AdminNavbar = ({isScrolled}) => {
           ))}
         </ul>
         <div className="flex gap-6">
-          <div className='flex text-brand-red font-medium w-fit items-center gap-2'>
+          <button  onClick={handleLogout} className='flex text-brand-red font-medium w-fit items-center gap-2'>
             <img src={Logout} alt="Image" className='w-5  ' />
             <p className='text-sm' >Log Out</p>
-          </div>
+          </button>
             <img src={Avater} alt="Image" className='w-10 rounded-full border border-brand-darkpurple' />
         
         </div>

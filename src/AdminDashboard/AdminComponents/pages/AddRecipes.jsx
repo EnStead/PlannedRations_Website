@@ -1,5 +1,5 @@
 import { ArrowLeft } from 'lucide-react';
-import AddRecipeForm from '../../../../Utility/AddRecipeForm';
+import AddRecipeForm from '../../../Utility/AddRecipeForm';
 
 const AddRecipes = () => {
   return (
