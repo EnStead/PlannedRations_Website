@@ -1,7 +1,3 @@
-
-
-
-
 // data/dashboardCards.js
 
 const recentSignups = [
@@ -128,100 +124,98 @@ function Header({ title }) {
   );
 }
 
-
-
 const DashboardCards = () => {
   return (
-    <div  className="grid grid-cols-1 lg:grid-cols-3 gap-6 my-4">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 my-4">
       <div className="bg-white rounded-2xl p-5  h-[320px] flex flex-col">
-          <Header title="Recent Signups" />
+        <Header title="Recent Signups" />
 
-          <div className="flex-1 overflow-y-auto hide-scrollbar space-y-4">
-              {recentSignups.map((user) => (
-              <div key={user.id} className="flex justify-between">
-                  <div className="flex gap-3">
-                  <img
-                      src={user.avatar}
-                      className="w-10 h-10 rounded-full object-cover"
-                  />
-                  <div>
-                      <p className="text-sm font-medium">{user.name}</p>
-                      <p className="text-xs text-gray-400">{user.email}</p>
-                  </div>
-                  </div>
-
-                  <div className="text-right">
-                  <p className="text-xs font-medium">{user.plan}</p>
-                  <p className="text-xs text-gray-400">{user.date}</p>
-                  </div>
+        <div className="flex-1 overflow-y-auto hide-scrollbar space-y-4">
+          {recentSignups.map((user) => (
+            <div key={user.id} className="flex justify-between">
+              <div className="flex gap-3">
+                <img
+                  src={user.avatar}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div>
+                  <p className="text-sm font-medium">{user.name}</p>
+                  <p className="text-xs text-gray-400">{user.email}</p>
+                </div>
               </div>
-              ))}
-          </div>
+
+              <div className="text-right">
+                <p className="text-xs font-medium">{user.plan}</p>
+                <p className="text-xs text-gray-400">{user.date}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       <div className="bg-white rounded-2xl p-5 h-[320px] flex flex-col">
-          <Header title="Top Recipes" />
+        <Header title="Top Recipes" />
 
-          <div className="flex-1 overflow-y-auto hide-scrollbar space-y-4">
-              {topRecipes.map((item) => (
-              <div key={item.id} className="flex items-center justify-between">
-                  <div className="flex gap-3">
-                  <img
-                      src={item.image}
-                      className="w-12 h-12 rounded-lg object-cover"
-                  />
-                  <div>
-                      <p className="text-sm font-medium">{item.title}</p>
-                      <p className="text-xs text-gray-400">
-                      {item.cooked} • {item.saved}
-                      </p>
-                  </div>
-                  </div>
-
-                  <span
-                  className={`text-xs font-medium ${
-                      item.positive ? "text-green-500" : "text-red-500"
-                  }`}
-                  >
-                  {item.trend}
-                  </span>
+        <div className="flex-1 overflow-y-auto hide-scrollbar space-y-4">
+          {topRecipes.map((item) => (
+            <div key={item.id} className="flex items-center justify-between">
+              <div className="flex gap-3">
+                <img
+                  src={item.image}
+                  className="w-12 h-12 rounded-lg object-cover"
+                />
+                <div>
+                  <p className="text-sm font-medium">{item.title}</p>
+                  <p className="text-xs text-gray-400">
+                    {item.cooked} • {item.saved}
+                  </p>
+                </div>
               </div>
-              ))}
-          </div>
+
+              <span
+                className={`text-xs font-medium ${
+                  item.positive ? "text-green-500" : "text-red-500"
+                }`}
+              >
+                {item.trend}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
       <div className="bg-white rounded-2xl p-5 h-[320px] flex flex-col">
-          <Header title="Top Blog / Article Performance" />
+        <Header title="Top Blog / Article Performance" />
 
-          <div className="flex-1 overflow-y-auto hide-scrollbar space-y-4">
-              {topBlogs.map((item) => (
-              <div key={item.id} className="flex items-center justify-between">
-                  <div className="flex gap-3">
-                  <img
-                      src={item.image}
-                      className="w-12 h-12 rounded-lg object-cover"
-                  />
-                  <div>
-                      <p className="text-sm font-medium line-clamp-1">
-                      {item.title}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                      {item.type} • {item.metric}
-                      </p>
-                  </div>
-                  </div>
-
-                  <span
-                  className={`text-xs font-medium ${
-                      item.positive ? "text-green-500" : "text-red-500"
-                  }`}
-                  >
-                  {item.trend}
-                  </span>
+        <div className="flex-1 overflow-y-auto hide-scrollbar space-y-4">
+          {topBlogs.map((item) => (
+            <div key={item.id} className="flex items-center justify-between">
+              <div className="flex gap-3">
+                <img
+                  src={item.image}
+                  className="w-12 h-12 rounded-lg object-cover"
+                />
+                <div>
+                  <p className="text-sm font-medium line-clamp-1">
+                    {item.title}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {item.type} • {item.metric}
+                  </p>
+                </div>
               </div>
-              ))}
-          </div>
+
+              <span
+                className={`text-xs font-medium ${
+                  item.positive ? "text-green-500" : "text-red-500"
+                }`}
+              >
+                {item.trend}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DashboardCards
+export default DashboardCards;

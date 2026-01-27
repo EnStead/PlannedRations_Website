@@ -12,6 +12,7 @@ import Users from "./pages/Users";
 import AdminLayout from "../Container/AdminLayout";
 import Posts from "./pages/Posts";
 import CreatePosts from "./pages/CreatePosts";
+import Tags from "./pages/Tags";
 
 const AdminDashboard = ({ isScrolled }) => {
   return (
@@ -36,9 +37,12 @@ const AdminDashboard = ({ isScrolled }) => {
         <Route path="ingredients" element={<Ingredients />} />
         <Route path="recipes" element={<Recipes />} />
         <Route path="recipes/add-recipe" element={<AddRecipes />} />
+        <Route path="recipes/edit-recipe/:id" element={<AddRecipes />} />
         <Route path="users" element={<Users />} />
         <Route path="posts" element={<Posts />} />
         <Route path="posts/create" element={<CreatePosts />} />
+        <Route path="posts/edit/:id" element={<CreatePosts />} />
+        <Route path="tags" element={<Tags />} />
 
       </Route>
     </Routes>

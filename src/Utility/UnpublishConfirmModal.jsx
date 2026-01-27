@@ -1,4 +1,4 @@
-const DeleteConfirmModal = ({ open, onClose, onConfirm, loading, title, subtext, actionBtn }) => {
+const UnpublishConfirmModal = ({ open, onClose, onConfirm, loading, title, subtext, actionBtn }) => {
   if (!open) return null;
 
   return (
@@ -10,7 +10,7 @@ const DeleteConfirmModal = ({ open, onClose, onConfirm, loading, title, subtext,
         </h2>
 
         <p className="text-sm text-brand-subtext text-center mb-8">
-          {subtext}
+            {subtext}
         </p>
 
         <div className="flex justify-between gap-4">
@@ -31,9 +31,9 @@ const DeleteConfirmModal = ({ open, onClose, onConfirm, loading, title, subtext,
             onClick={onConfirm}
             disabled={loading}
             className="
-              flex-1 bg-brand-red text-white rounded-full py-2
+              flex-1 bg-brand-cardhead text-white rounded-full py-2
               transition
-              hover:bg-brand-red/80
+              hover:bg-brand-secondary/80
               disabled:opacity-60 disabled:cursor-not-allowed
               flex items-center justify-center gap-2
             "
@@ -41,15 +41,14 @@ const DeleteConfirmModal = ({ open, onClose, onConfirm, loading, title, subtext,
             {loading && (
               <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             )}
-            {loading ? "Deleting..." : `${actionBtn}`}
+            {loading ? "Publishing..." : `${actionBtn}`}
           </button>
 
         </div>
-
 
       </div>
     </div>
   );
 };
 
-export default DeleteConfirmModal;
+export default UnpublishConfirmModal;

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { useEffect, useState } from 'react';
+import LogoLoader from "../Utility/LogoLoader";
 
 const BlogPagePostSection = ({searchQuery}) => {
 
@@ -34,9 +35,9 @@ const BlogPagePostSection = ({searchQuery}) => {
 
   if (loading) {
     return (
-        <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-10 h-10 border-4 border-brand-secondary border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-4 text-brand-head font-semibold text-xl">Loading blog posts...</p>
+        <div className="flex flex-col items-center justify-center mt-20 py-20">
+            <LogoLoader />
+            {/* <p className="mt-4 text-brand-head font-semibold text-xl">Loading blog posts...</p> */}
         </div>
     );
   }

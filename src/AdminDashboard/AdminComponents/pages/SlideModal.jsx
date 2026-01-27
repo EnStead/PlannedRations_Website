@@ -1,8 +1,8 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
-import Image from "../../../assets/Profile.jpg"
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { MoreVertical, X } from "lucide-react";
 
-const SideModal = ({ open, onOpenChange, selectedRow, title }) => {
+const SideModal = ({ open, onOpenChange, selectedRow, title, onReset, onDelete }) => {
 
     const formatDate = (value) => {
     if (!value) return "—";
@@ -14,6 +14,14 @@ const SideModal = ({ open, onOpenChange, selectedRow, title }) => {
     });
     };
 
+  const handleReset = () => {
+    if (onReset) onReset();
+  };
+
+  const handleDelete = () => {
+    if (onDelete) onDelete();
+  };
+
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -23,12 +31,43 @@ const SideModal = ({ open, onOpenChange, selectedRow, title }) => {
         {/* Side Panel */}
         <Dialog.Content className="fixed z-100 top-0 right-0 h-full w-[400px] hide-scrollbar bg-white shadow-lg p-6 overflow-y-auto transform transition-transform duration-300 ease-in-out">
           
-            <Dialog.Title className="text-xl text-center font-dash font-semibold">{title}</Dialog.Title>
-            <Dialog.Close asChild>
-              <button className="text-gray-500 hover:text-gray-700 absolute top-7 right-7 ">
-                <X/>
-              </button>
-            </Dialog.Close>
+            {/* Header */}
+            <div className="flex items-center justify-between px-1 py-4">
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger asChild>
+                  <button className="p-1 hover:bg-gray-100 rounded">
+                    <MoreVertical size={20} className="text-gray-600" />
+                  </button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content className="bg-white relative rounded-lg shadow-lg border border-gray-200 p-2 min-w-[160px] z-100">
+                    <DropdownMenu.Item 
+                      className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded cursor-pointer outline-none"
+                      onSelect={handleReset}
+                    >
+                      Reset Password
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item 
+                      className="px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded cursor-pointer outline-none"
+                      onSelect={handleDelete}
+                    >
+                      Delete Account
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
+
+              <Dialog.Title className="text-lg font-semibold text-gray-900 absolute left-1/2 transform -translate-x-1/2">
+                User Details
+              </Dialog.Title>
+
+              <Dialog.Close asChild>
+                <button className="p-1 hover:bg-gray-100 rounded text-gray-600 hover:text-gray-800">
+                  <X size={20} />
+                </button>
+              </Dialog.Close>
+            </div>
+ 
             <Dialog.Description>
                 
             </Dialog.Description>

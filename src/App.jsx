@@ -1,14 +1,19 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LandingPage from "./container/LandingPage"
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Routes,
+  Route,
+} from "react-router-dom";
+import LandingPage from "./container/LandingPage";
 import Blog from "./container/Blog";
 import BlogPostSection from "./component/BlogPostSection";
-import BlogFooterbg from './assets/BlogFooterbg.jpg'
-import PrivacyFooterbg from './assets/PrivacyFooterbg.jpg'
-import TermFooterbg from './assets/TermFooterbg.jpg'
-import BlogCursor from './assets/BlogCursor.svg'
-import TermCursor from './assets/TermCursor.svg'
-import Footerbg from './assets/Footerbg.jpg'
-import Cursor from './assets/Cursor.svg'
+import BlogFooterbg from "./assets/BlogFooterbg.jpg";
+import PrivacyFooterbg from "./assets/PrivacyFooterbg.jpg";
+import TermFooterbg from "./assets/TermFooterbg.jpg";
+import BlogCursor from "./assets/BlogCursor.svg";
+import TermCursor from "./assets/TermCursor.svg";
+import Footerbg from "./assets/Footerbg.jpg";
+import Cursor from "./assets/Cursor.svg";
 import { useEffect, useState } from "react";
 import Layout from "./container/Layout";
 import ContactPage from "./container/ContactPage";
@@ -19,41 +24,39 @@ import { AuthProvider } from "./AdminDashboard/Context/AuthContext";
 import { ToastProvider } from "./AdminDashboard/Context/ToastProvider";
 import AdminDashboard from "./AdminDashboard/AdminComponents/AdminDashboard";
 
+function AppContent() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20); // become fixed after 50px scroll
+    };
 
-
-function App() {
-
-    const [isScrolled, setIsScrolled] = useState(false);
-    useEffect(() => {
-        const handleScroll = () => {
-          setIsScrolled(window.scrollY > 20); // become fixed after 50px scroll
-        };
-    
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <Router>
-
-      <ScrollToTop /> 
-
+    <>
+      <ScrollToTop />
 
       <Routes>
         <Route
           path="/"
           element={
             <div className="bg-brand-accent min-h-screen">
-              <Layout 
-                isScrolled={isScrolled} 
-                setIsScrolled={setIsScrolled} 
-                Footerbg={Footerbg} 
-                LeftCard='#76B1FF' 
-                Cursors={Cursor} 
-                Tooltip='#F9A720' 
+              <Layout
+                isScrolled={isScrolled}
+                setIsScrolled={setIsScrolled}
+                Footerbg={Footerbg}
+                LeftCard="#76B1FF"
+                Cursors={Cursor}
+                Tooltip="#F9A720"
                 showFooter={false}
               >
-                <LandingPage isScrolled={isScrolled} setIsScrolled={setIsScrolled} />
+                <LandingPage
+                  isScrolled={isScrolled}
+                  setIsScrolled={setIsScrolled}
+                />
               </Layout>
             </div>
           }
@@ -70,20 +73,17 @@ function App() {
           }
         />
 
-
-
         <Route
           path="/blog"
           element={
-            <Layout 
-              isScrolled={isScrolled} 
-              setIsScrolled={setIsScrolled} 
-              Footerbg={BlogFooterbg} 
-              LeftCard='#F9A720'
-              Cursors={BlogCursor} 
-              Tooltip='#9E78F6'  
+            <Layout
+              isScrolled={isScrolled}
+              setIsScrolled={setIsScrolled}
+              Footerbg={BlogFooterbg}
+              LeftCard="#F9A720"
+              Cursors={BlogCursor}
+              Tooltip="#9E78F6"
               showFooter={false}
-
             >
               <Blog />
             </Layout>
@@ -92,14 +92,13 @@ function App() {
         <Route
           path="/blog/:id"
           element={
-            <Layout 
-              Footerbg={BlogFooterbg} 
-              LeftCard='#F9A720' 
-              Cursors={BlogCursor} 
-              Tooltip='#9E78F6' 
-              forceFixed={true} 
+            <Layout
+              Footerbg={BlogFooterbg}
+              LeftCard="#F9A720"
+              Cursors={BlogCursor}
+              Tooltip="#9E78F6"
+              forceFixed={true}
               showFooter={false}
-
             >
               <BlogPostSection />
             </Layout>
@@ -108,12 +107,12 @@ function App() {
         <Route
           path="/privacy"
           element={
-            <Layout 
-              Footerbg={PrivacyFooterbg} 
-              LeftCard='#000' 
-              Cursors={Cursor} 
-              Tooltip='#F9A720' 
-              forceFixed={true} 
+            <Layout
+              Footerbg={PrivacyFooterbg}
+              LeftCard="#000"
+              Cursors={Cursor}
+              Tooltip="#F9A720"
+              forceFixed={true}
             >
               <Privacy />
             </Layout>
@@ -122,12 +121,12 @@ function App() {
         <Route
           path="/term"
           element={
-            <Layout 
-              Footerbg={TermFooterbg} 
-              LeftCard='#7B61FF' 
-              Cursors={TermCursor} 
-              Tooltip='#EE542B' 
-              forceFixed={true} 
+            <Layout
+              Footerbg={TermFooterbg}
+              LeftCard="#7B61FF"
+              Cursors={TermCursor}
+              Tooltip="#EE542B"
+              forceFixed={true}
             >
               <Terms />
             </Layout>
@@ -137,26 +136,34 @@ function App() {
           path="/contact"
           element={
             <div className="bg-brand-background1">
-              <Layout 
-                isScrolled={isScrolled} 
-                setIsScrolled={setIsScrolled} 
-                Footerbg={BlogFooterbg} 
-                LeftCard='#F9A720' 
-                Cursors={BlogCursor} 
-                Tooltip='#9E78F6' 
+              <Layout
+                isScrolled={isScrolled}
+                setIsScrolled={setIsScrolled}
+                Footerbg={BlogFooterbg}
+                LeftCard="#F9A720"
+                Cursors={BlogCursor}
+                Tooltip="#9E78F6"
                 showFooter={false}
-
               >
                 <ContactPage />
-              </Layout>             
+              </Layout>
             </div>
           }
         />
       </Routes>
-
-    </Router>
-  )
+    </>
+  );
 }
 
-export default App
- 
+const router = createBrowserRouter([
+  {
+    path: "*",
+    element: <AppContent />,
+  },
+]);
+
+function App() {
+  return <RouterProvider router={router} />;
+}
+
+export default App;

@@ -7,6 +7,7 @@ import Instagram from "../assets/Bloginstagram.svg"
 import BlogBackground from "../assets/Blogbackground.jpg"
 import { useEffect, useState } from "react";
 import axios from "axios";
+import LogoLoader from "../Utility/LogoLoader";
 
 const BlogPostSection = () => {
 
@@ -54,11 +55,11 @@ const BlogPostSection = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <div className="w-10 h-10 border-4 border-brand-orange border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-4 text-brand-head font-semibold text-xl">
+      <div className="flex flex-col items-center justify-center mt-20 py-20">
+        <LogoLoader />
+        {/* <p className="mt-4 text-brand-head font-semibold text-xl">
           Loading blog post...
-        </p>
+        </p> */}
       </div>
     );
   }
@@ -82,7 +83,7 @@ const BlogPostSection = () => {
         className="relative h-[70vh] w-full  overflow-hidden"
       >
         <img
-          src={post.thumbnail_url || BlogBackground}
+          src={post.thumbnail_url || post.thumbnailUrl}
           alt={post.title}
           className="w-full h-full object-cover"
         />
@@ -94,7 +95,7 @@ const BlogPostSection = () => {
               day: "numeric",
               year: "numeric",
             })}{" "}
-            • {post.rreading_time}
+            • {post.reading_time}
           </p>
         </div>
       </section>
@@ -152,7 +153,7 @@ const BlogPostSection = () => {
                     className="bg-transparent overflow-hidden flex flex-col"
                 >
                 <img
-                    src={post.thumbnail_url}
+                    src={post.thumbnail_url || post.thumbnailUrl}
                     alt={post.title}
                     className="w-full h-40 ssm:h-33 xsm:h-43 rounded-2xl object-cover"
                 />

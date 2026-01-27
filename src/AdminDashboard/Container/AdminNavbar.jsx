@@ -12,7 +12,7 @@ const AdminNavbar = ({isScrolled}) => {
   const { logout } = useAuth();
   const { showToast } = useToast();
 
-    const handleLogout = () => {
+  const handleLogout = () => {
     logout();
 
     showToast({
@@ -43,6 +43,7 @@ const AdminNavbar = ({isScrolled}) => {
             { to: "/admin/posts", label: "Blogs & Article" },
             { to: "/admin/recipes", label: "Recipes" },
             { to: "/admin/ingredients", label: "Ingredients" },
+            { to: "/admin/tags", label: "Tags & Category" },
           ].map((item) => (
             <li key={item.to}>
               <NavLink
