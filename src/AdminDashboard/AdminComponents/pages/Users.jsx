@@ -132,16 +132,29 @@ const Users = () => {
           params: { page: currentPage, search: search || "" },
         });
 
-        const users = res.data?.data || [];
+        const responseData = res.data?.data;
+        // Handle nested pagination structure: response.data.data.data
+        const users = Array.isArray(responseData?.data)
+          ? responseData.data
+          : [];
         allUsers = [...allUsers, ...users];
-        lastPage = res.data?.last_page || 1;
+        lastPage = responseData?.last_page || 1;
         currentPage++;
       } while (currentPage <= lastPage);
+
+      if (allUsers.length === 0) {
+        showToast({
+          title: "Info",
+          description: "No users found to export",
+          variant: "info",
+        });
+        return;
+      }
 
       // build CSV from allUsers
       generateCSV(allUsers);
     } catch (err) {
-       console.error(err);
+      console.error(err);
       showToast({
         title: "Error",
         description: "Failed to export all users",
@@ -152,12 +165,6 @@ const Users = () => {
     }
   };
 
-  if (isLoading)
-    return (
-      <div className="p-10">
-        <TableSkeleton />
-      </div>
-    );
   if (isError) return <p className="p-10">Failed to load users</p>;
 
   return (
@@ -201,58 +208,65 @@ const Users = () => {
             </button>
           </div>
         </div>
-        <div className="mt-8">
-          <ReusableTable
-            columns={[
-              {
-                label: "Name",
-                accessor: "name",
-                className: "font-medium text-brand-cardhead",
-              },
-              {
-                label: "Email Address",
-                accessor: "email",
-              },
-              {
-                label: "Plan Type",
-                accessor: "plan_name",
-                className: "capitalize",
-              },
-              {
-                label: "Duration",
-                accessor: "plan_code",
-                className: "capitalize",
-                render: (value) => {
-                  const map = {
-                    planned_rations_monthly: "Monthly",
-                    planned_rations_quarterly: "Quarterly",
-                    planned_rations_annually: "Annualy/Premium",
-                    planned_rations_family_monthly: "Family",
-                  };
-                  return map[value] || value;
+        {
+          isLoading ? 
+            <div className="p-10">
+            <TableSkeleton />
+          </div> :
+          <div className="mt-8">
+            <ReusableTable
+              columns={[
+                {
+                  label: "Name",
+                  accessor: "name",
+                  className: "font-medium text-brand-cardhead",
                 },
-              },
-              {
-                label: "Joined On",
-                accessor: "created_at",
-                render: (value) =>
-                  new Date(value).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "2-digit",
-                    year: "numeric",
-                  }),
-              },
-            ]}
-            data={data?.data}
-            actions="menu"
-            menuItems={[
-              { label: "View Details", action: "view" },
-              { label: "Reset Password", action: "reset" },
-              { label: "Delete Account", action: "delete", destructive: true },
-            ]}
-            onAction={handleUserAction}
-          />
-        </div>
+                {
+                  label: "Email Address",
+                  accessor: "email",
+                },
+                {
+                  label: "Plan Type",
+                  accessor: "plan_name",
+                  className: "capitalize",
+                },
+                {
+                  label: "Duration",
+                  accessor: "plan_code",
+                  className: "capitalize",
+                  render: (value) => {
+                    const map = {
+                      planned_rations_monthly: "Monthly",
+                      planned_rations_quarterly: "Quarterly",
+                      planned_rations_annually: "Annualy/Premium",
+                      planned_rations_family_monthly: "Family",
+                    };
+                    return map[value] || value;
+                  },
+                },
+                {
+                  label: "Joined On",
+                  accessor: "created_at",
+                  render: (value) =>
+                    new Date(value).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "2-digit",
+                      year: "numeric",
+                    }),
+                },
+              ]}
+              data={data?.data}
+              actions="menu"
+              menuItems={[
+                { label: "View Details", action: "view" },
+                { label: "Reset Password", action: "reset" },
+                { label: "Delete Account", action: "delete", destructive: true },
+              ]}
+              onAction={handleUserAction}
+            />
+          </div>
+
+        }
       </section>
 
       <SideModal
@@ -287,12 +301,14 @@ const Users = () => {
       />
 
       {/* Pagination */}
-      <PaginationFooter
-        page={data.current_page}
-        lastPage={data.last_page}
-        onPrev={() => setPage((p) => Math.max(p - 1, 1))}
-        onNext={() => setPage((p) => Math.min(p + 1, data.last_page))}
-      />
+      {data && (
+        <PaginationFooter
+          page={data.current_page}
+          lastPage={data.last_page}
+          onPrev={() => setPage((p) => Math.max(p - 1, 1))}
+          onNext={() => setPage((p) => Math.min(p + 1, data.last_page))}
+        />
+      )}
     </>
   );
 };

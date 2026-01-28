@@ -6,63 +6,33 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  Cell,
   CartesianGrid,
+  Cell,
 } from "recharts";
 
-const chartData = {
-  total: [
-    { month: "Jan", value: 6200 },
-    { month: "Feb", value: 3400 },
-    { month: "Mar", value: 4900 },
-    { month: "Apr", value: 2700 },
-    { month: "May", value: 4400 },
-    { month: "Jun", value: 2300 },
-    { month: "Jul", value: 3800 },
-    { month: "Aug", value: 4400 },
-    { month: "Sep", value: 5600 },
-    { month: "Oct", value: 7200 },
-    { month: "Nov", value: 600 },
-    { month: "Dec", value: 200 },
-  ],
-  active: [
-    { month: "Jan", value: 4200 },
-    { month: "Feb", value: 2800 },
-    { month: "Mar", value: 3600 },
-    { month: "Apr", value: 2100 },
-    { month: "May", value: 3100 },
-    { month: "Jun", value: 1900 },
-    { month: "Jul", value: 2600 },
-    { month: "Aug", value: 3000 },
-    { month: "Sep", value: 3800 },
-    { month: "Oct", value: 4200 },
-    { month: "Nov", value: 400 },
-    { month: "Dec", value: 150 },
-  ],
-  signup: [
-    { month: "Jan", value: 1200 },
-    { month: "Feb", value: 900 },
-    { month: "Mar", value: 1100 },
-    { month: "Apr", value: 700 },
-    { month: "May", value: 1400 },
-    { month: "Jun", value: 600 },
-    { month: "Jul", value: 800 },
-    { month: "Aug", value: 1000 },
-    { month: "Sep", value: 1200 },
-    { month: "Oct", value: 1600 },
-    { month: "Nov", value: 200 },
-    { month: "Dec", value: 90 },
-  ],
-};
-
 const tabs = [
-  { key: "total", label: "Total users" },
+  { key: "total", label: "Total Signups" },
   { key: "active", label: "Active subscribers" },
-  { key: "signup", label: "New signups" },
 ];
 
-export default function UserGrowthChart() {
+const ALL_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+export default function UserGrowthChart({ totalSignups, activeSubscribers }) {
   const [activeTab, setActiveTab] = useState("total");
+  const currentMonth = ALL_MONTHS[new Date().getMonth()];
+
+  const processData = (data) => {
+    const map = new Map((data || []).map((d) => [d.month, d.value]));
+    return ALL_MONTHS.map((month) => ({
+      month,
+      value: map.get(month) || 0,
+    }));
+  };
+
+  const chartData = {
+    total: processData(totalSignups),
+    active: processData(activeSubscribers),
+  };
 
   return (
     <div className="bg-white rounded-2xl p-4 ">
@@ -125,14 +95,10 @@ export default function UserGrowthChart() {
               }}
             />
             <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-              {chartData[activeTab].map((entry) => (
+              {chartData[activeTab].map((entry, index) => (
                 <Cell
-                  key={entry.month}
-                  fill={
-                    entry.month === "May"
-                      ? "#B091F7"
-                      : "#E7DEFC"
-                  }
+                  key={`cell-${index}`}
+                  fill={entry.month === currentMonth ? "#B091F7" : "#E7DEFC"}
                 />
               ))}
             </Bar>

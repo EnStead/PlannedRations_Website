@@ -26,6 +26,7 @@ const AddTagModal = ({
     sub_category: "",
     description: "",
     applies_to: [],
+    good_for: "",
   });
   const [taxonomy, setTaxonomy] = useState([]);
   const [loadingTaxonomy, setLoadingTaxonomy] = useState(false);
@@ -39,6 +40,10 @@ const AddTagModal = ({
         sub_category: initialValues.sub_category ?? "",
         description: initialValues.description ?? "",
         applies_to: initialValues.applies_to ?? [],
+        good_for:
+          initialValues.good_for !== undefined && initialValues.good_for !== null
+            ? initialValues.good_for ? "true" : "false"
+            : "",
       });
     } else {
       setForm({
@@ -47,6 +52,7 @@ const AddTagModal = ({
         sub_category: "",
         description: "",
         applies_to: [],
+        good_for: "",
       });
     }
   }, [mode, initialValues, open]);
@@ -87,7 +93,10 @@ const AddTagModal = ({
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(form); // 🔥 backend-ready payload
+    onSubmit({
+      ...form,
+      good_for: form.good_for === "true",
+    }); // 🔥 backend-ready payload
   };
 
   return (
@@ -95,10 +104,10 @@ const AddTagModal = ({
       <Dialog.Root open={open} onOpenChange={onClose}>
         <Dialog.Portal>
           {/* Overlay */}
-          <Dialog.Overlay className="fixed inset-0 bg-black/30 z-40" />
+          <Dialog.Overlay className="fixed inset-0 bg-black/40 z-50" />
 
           {/* Modal */}
-          <Dialog.Content className="fixed z-50 top-1/2 left-1/2 w-[500px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl p-6 shadow-lg">
+          <Dialog.Content className="fixed z-60 top-1/2 left-1/2 w-[500px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl p-6 shadow-lg">
             <Dialog.Title className="text-xl text-center font-dash font-medium mb-1">
               {mode === "add" ? "Add Tags" : "Edit Tags"}
             </Dialog.Title>
@@ -115,20 +124,57 @@ const AddTagModal = ({
 
             <form onSubmit={handleSubmit} className="mt-4 space-y-4">
               {/* -------------------- TAG NAME -------------------- */}
-              <div className="flex flex-col">
-                <label
-                  className={`mb-1 font-medium ${form.title?.trim() !== "" ? "text-brand-primary" : "text-brand-muted"}`}
-                >
-                  Tag Name
-                </label>
-                <input
-                  name="title"
-                  value={form.title}
-                  onChange={handleChange}
-                  placeholder="Eg: Diasafe, Preggo"
-                  required
-                  className={`border ${form.title?.trim() !== "" ? "border-brand-primary" : "border-brand-planoff"} rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-brand-primary`}
-                />
+              <div className="flex gap-4">
+                <div className="flex flex-col w-full">
+                  <label
+                    className={`mb-1 font-medium ${form.title?.trim() !== "" ? "text-brand-primary" : "text-brand-muted"}`}
+                  >
+                    Tag Name
+                  </label>
+                  <input
+                    name="title"
+                    value={form.title}
+                    onChange={handleChange}
+                    placeholder="Eg: Diasafe, Preggo"
+                    required
+                    className={`border ${form.title?.trim() !== "" ? "border-brand-primary" : "border-brand-planoff"} rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-brand-primary`}
+                  />
+                </div>
+
+                {/* -------------------- GOOD FOR -------------------- */}
+                <div className="w-full">
+                  <label
+                    className={`mb-1 font-medium ${form.good_for ? "text-brand-primary" : "text-brand-muted"}`}
+                  >
+                    Good For
+                  </label>
+                  <Select.Root
+                    value={form.good_for}
+                    onValueChange={(v) => setForm((prev) => ({ ...prev, good_for: v }))}
+                  >
+                    <Select.Trigger
+                      className={`border ${form.good_for ? "border-brand-primary" : "border-brand-planoff"} w-full flex justify-between items-center rounded-xl px-4 py-3`}
+                    >
+                      <Select.Value placeholder="Select option" />
+                      <ChevronDown className="h-4 w-4 opacity-50" />
+                    </Select.Trigger>
+
+                    <Select.Portal>
+                      <Select.Content className="bg-white rounded-md shadow border z-[60]">
+                        <Select.Viewport className="p-1">
+                          {["true", "false"].map((opt) => (
+                            <Select.Item key={opt} value={opt} className="px-8 py-2 text-sm cursor-pointer hover:bg-brand-secondary/10 capitalize">
+                              <Select.ItemText>{opt}</Select.ItemText>
+                              <Select.ItemIndicator className="absolute left-2">
+                                <Check className="h-4 w-4" />
+                              </Select.ItemIndicator>
+                            </Select.Item>
+                          ))}
+                        </Select.Viewport>
+                      </Select.Content>
+                    </Select.Portal>
+                  </Select.Root>
+                </div>
               </div>
 
               {/* -------------------- CATEGORY -------------------- */}

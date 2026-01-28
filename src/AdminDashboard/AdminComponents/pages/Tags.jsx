@@ -123,13 +123,6 @@ const Tags = () => {
     }
   };
 
-  if (isLoading)
-    return (
-      <div className="p-10">
-        <TableSkeleton />
-      </div>
-    );
-
   if (isError) return <p className="p-10">Failed to load tags</p>;
 
   return (
@@ -168,41 +161,51 @@ const Tags = () => {
             </button>
           </div>
         </div>
-        <div className="mt-8">
-          <ReusableTable
-            columns={[
-              {
-                label: "Tag Title",
-                accessor: "title",
-                className: "font-medium text-brand-cardhead",
-              },
-              {
-                label: "Morality",
-                accessor: "morality",
-              },
-              {
-                label: "Category",
-                accessor: "category",
-              },
-              {
-                label: "Sub-category/Type",
-                accessor: "sub_category",
-              },
-              {
-                label: "Usage",
-                accessor: "usage_label",
-              },
-            ]}
-            data={users}
-            actions="menu"
-            menuItems={[
-              { label: "Edit Tag", action: "edit" },
-              { label: "View Usage", action: "view" },
-              { label: "Delete Tag", action: "delete", destructive: true },
-            ]}
-            onAction={handleTagAction}
-          />
-        </div>
+        {isLoading ? (
+          <div className="p-10">
+            <TableSkeleton />
+          </div>
+        ) : (
+          <div className="mt-8">
+            <ReusableTable
+              columns={[
+                {
+                  label: "Tag Title",
+                  accessor: "title",
+                  className: "font-medium text-brand-cardhead",
+                },
+                {
+                  label: "Morality",
+                  accessor: "good_for",
+                  render: (value) =>
+                    String(value) === "1" || String(value) === "true"
+                      ? "Is good for"
+                      : "Is bad for",
+                },
+                {
+                  label: "Category",
+                  accessor: "category",
+                },
+                {
+                  label: "Sub-category/Type",
+                  accessor: "sub_category",
+                },
+                {
+                  label: "Usage",
+                  accessor: "usage_label",
+                },
+              ]}
+              data={users}
+              actions="menu"
+              menuItems={[
+                { label: "Edit Tag", action: "edit" },
+                { label: "View Usage", action: "view" },
+                { label: "Delete Tag", action: "delete", destructive: true },
+              ]}
+              onAction={handleTagAction}
+            />
+          </div>
+        )}
       </section>
       <AddTagModal
         open={isModalOpen}

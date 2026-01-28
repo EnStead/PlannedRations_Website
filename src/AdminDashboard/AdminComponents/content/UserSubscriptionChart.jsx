@@ -1,15 +1,15 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
-const data = [
-  { name: "Premium Users", value: 4102, color: "#8B5CF6" },
-  { name: "Family Heads", value: 1282, color: "#A78BFA" },
-  { name: "Family Members", value: 3491, color: "#1F1B3A" },
-  { name: "Free Users", value: 273, color: "#E5E7EB" },
-];
+export default function UserSubscriptionChart({ analytics }) {
+  const data = [
+    { name: "Premium Users", value: analytics?.premium_users?.count || 0, color: "#8B5CF6" },
+    { name: "Family Heads", value: analytics?.family_heads?.count || 0, color: "#A78BFA" },
+    { name: "Family Members", value: analytics?.family_members?.count || 0, color: "#1F1B3A" },
+    { name: "Free Users", value: analytics?.free_users?.count || 0, color: "#E5E7EB" },
+  ];
 
-const totalUsers = data.reduce((acc, item) => acc + item.value, 0);
+  const totalUsers = analytics?.total_users || 0;
 
-export default function UserSubscriptionChart() {
   return (
     <div className="bg-white rounded-2xl p-4 flex items-center gap-4">
       {/* Chart */}

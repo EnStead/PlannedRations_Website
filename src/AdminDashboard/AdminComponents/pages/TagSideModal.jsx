@@ -93,7 +93,7 @@ const TagSideModal = ({ open, onOpenChange, tag, onEdit, onDelete }) => {
                   </div>
                   <div className="">
                     <span className="text-sm font-light">Tag Morality</span>
-                    <p className="mt-2">{data.morality}</p>
+                    <p className="mt-2">{data.good_for ? "True" : "False"}</p>
                   </div>
                   <div className="">
                     <span className="text-sm font-light">Category</span>

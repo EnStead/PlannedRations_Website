@@ -101,9 +101,6 @@ const Ingredients = () => {
     }
   };
 
-  {
-    isLoading && <TableSkeleton />;
-  }
 
   {
     !isLoading && ingredients.length === 0 && (
@@ -113,7 +110,7 @@ const Ingredients = () => {
     );
   }
 
-  if (isError) return <p className="p-10">Failed to load users</p>;
+  if (isError) return <p className="p-10">Failed to load Ingredients</p>;
 
   return (
     <>
@@ -151,34 +148,41 @@ const Ingredients = () => {
             </button>
           </div>
         </div>
-        <div className="mt-8">
-          <ReusableTable
-            columns={[
-              {
-                label: "Ingredient",
-                accessor: "name",
-                className: "font-medium text-brand-cardhead",
-              },
-              {
-                label: "Category",
-                accessor: "category",
-              },
-              {
-                label: "Default Unit",
-                accessor: "default_unit",
-              },
-              {
-                label: "Used In",
-                accessor: "recipes_count",
-                render: (value) => `${value} recipe${value !== 1 ? "s" : ""}`,
-              },
-            ]}
-            data={ingredients}
-            actions="editDelete"
-            onEdit={openEditModal}
-            onDelete={openDeleteModal}
-          />
-        </div>
+                {isLoading ? (
+          <div className="p-10">
+            <TableSkeleton />
+          </div>
+        ) : (
+          <div className="mt-8">
+            <ReusableTable
+              columns={[
+                {
+                  label: "Ingredient",
+                  accessor: "name",
+                  className: "font-medium text-brand-cardhead",
+                },
+                {
+                  label: "Category",
+                  accessor: "category",
+                },
+                {
+                  label: "Default Unit",
+                  accessor: "default_unit",
+                },
+                {
+                  label: "Used In",
+                  accessor: "recipes_count",
+                  render: (value) => `${value} recipe${value !== 1 ? "s" : ""}`,
+                },
+              ]}
+              data={ingredients}
+              actions="editDelete"
+              onEdit={openEditModal}
+              onDelete={openDeleteModal}
+            />
+          </div>
+
+        )}
 
         <IngredientModal
           open={isModalOpen}
