@@ -7,9 +7,11 @@ import { useState } from 'react'
 import IngredientModal from '../../../Utility/IngredientModal'
 import api from '../../../Utility/api'
 import { useToast } from '../../Context/ToastProvider'
+import ActivityLogModal from '../pages/ActivityLogModal'
 
 const CardButtons = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isActivityLogOpen, setIsActivityLogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useToast();
 
@@ -73,7 +75,7 @@ const CardButtons = () => {
       image: Download,
       title: "Activity Log",
       text: "View the actions taken by you or other admin with to.",
-      path: "#",
+      action: () => setIsActivityLogOpen(true),
     },
   ];
 
@@ -118,6 +120,11 @@ const CardButtons = () => {
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
         loading={isSubmitting}
+      />
+
+      <ActivityLogModal
+        open={isActivityLogOpen}
+        onOpenChange={setIsActivityLogOpen}
       />
     </>
   );
