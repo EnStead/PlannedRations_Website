@@ -107,7 +107,7 @@ const AddTagModal = ({
           <Dialog.Overlay className="fixed inset-0 bg-black/40 z-50" />
 
           {/* Modal */}
-          <Dialog.Content className="fixed z-60 top-1/2 left-1/2 w-[500px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl p-6 shadow-lg">
+          <Dialog.Content className="fixed z-60 top-1/2 left-1/2 w-[90%] max-w-[500px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl p-6 shadow-lg">
             <Dialog.Title className="text-xl text-center font-dash font-medium mb-1">
               {mode === "add" ? "Add Tags" : "Edit Tags"}
             </Dialog.Title>
@@ -124,7 +124,7 @@ const AddTagModal = ({
 
             <form onSubmit={handleSubmit} className="mt-4 space-y-4">
               {/* -------------------- TAG NAME -------------------- */}
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex flex-col w-full">
                   <label
                     className={`mb-1 font-medium ${form.title?.trim() !== "" ? "text-brand-primary" : "text-brand-muted"}`}
@@ -178,7 +178,7 @@ const AddTagModal = ({
               </div>
 
               {/* -------------------- CATEGORY -------------------- */}
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <div className="w-full">
                   <label
                     className={`mb-1 font-medium ${form.category?.trim() !== "" ? "text-brand-primary" : "text-brand-muted"}`}

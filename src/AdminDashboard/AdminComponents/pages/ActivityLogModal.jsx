@@ -105,7 +105,7 @@ const ActivityLogModal = ({ open, onOpenChange }) => {
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/30 z-50" />
-        <Dialog.Content className="fixed z-50 top-0 right-0 h-full w-[400px] bg-white shadow-lg p-0 flex flex-col transform transition-transform duration-300 ease-in-out focus:outline-none">
+        <Dialog.Content className="fixed z-50 top-0 right-0 h-full w-full sm:w-[400px] bg-white shadow-lg p-0 flex flex-col transform transition-transform duration-300 ease-in-out focus:outline-none">
             
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">

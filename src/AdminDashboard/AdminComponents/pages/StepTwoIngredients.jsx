@@ -129,7 +129,7 @@ const StepTwoIngredients = ({
         {ingredients.map((ingredient, index) => (
           <div
             key={ingredient.id}
-            className={`flex gap-4 items-start transition-all duration-300 ease-in-out rounded-xl ingredient-row ${
+            className={`flex flex-col sm:flex-row gap-4 items-start transition-all duration-300 ease-in-out rounded-xl ingredient-row ${
               draggedIndex === index ? "shadow-2xl bg-white py-4 scale-[1.02] z-10" : ""
             }`}
             onDragEnter={(e) => {
@@ -138,17 +138,17 @@ const StepTwoIngredients = ({
             }}
             onDragOver={(e) => e.preventDefault()}
           >
-            <button
-              type="button"
-              draggable
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragEnd={handleDragEnd}
-              className="mt-8 p-3 cursor-grab text-brand-subtext hover:text-brand-primary active:cursor-grabbing"
-            >
-              <GripVertical size={20} />
-            </button>
+            <div className="flex-1 w-full flex gap-2 items-start">
+              <button
+                type="button"
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragEnd={handleDragEnd}
+                className="mt-3 sm:mt-8 p-3 cursor-grab text-brand-subtext hover:text-brand-primary active:cursor-grabbing"
+              >
+                <GripVertical size={20} />
+              </button>
 
-            <div className="flex-1">
               <CustomSelect
                 label="Ingredient"
                 options={availableIngredients.map((i) => i.name)}
@@ -165,7 +165,7 @@ const StepTwoIngredients = ({
               />
             </div>
 
-            <div className="">
+            <div className="w-full sm:w-auto">
               <label className={`mb-1 block font-medium transition ${
                 ingredient.quantity ? "text-brand-primary" : "text-brand-cartext"
               }`}>
@@ -188,7 +188,7 @@ const StepTwoIngredients = ({
               />
             </div>
 
-            <div className="w-42">
+            <div className="w-full sm:w-42">
               <CustomSelect
                 label="Unit"
                 options={UNITS}
@@ -207,7 +207,7 @@ const StepTwoIngredients = ({
 
             <button
               onClick={() => removeIngredient(index)}
-              className="mt-8 p-3 text-brand-red hover:bg-red-50 rounded-full transition"
+              className="mt-0 sm:mt-8 p-3 text-brand-red hover:bg-red-50 rounded-full transition self-end sm:self-auto"
             >
               <Trash2 size={20} />
             </button>
@@ -223,7 +223,7 @@ const StepTwoIngredients = ({
         Add Another Ingredient
       </button>
 
-      <div className="flex w-full justify-between mt-10">
+      <div className="flex flex-col sm:flex-row w-full justify-between mt-10 gap-4">
         <button
           onClick={handleNext}
           className="bg-brand-secondary text-white rounded-full px-6 py-3 font-medium hover:opacity-90"

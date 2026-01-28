@@ -39,7 +39,7 @@ const TagSideModal = ({ open, onOpenChange, tag, onEdit, onDelete }) => {
             <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50" />
 
             {/* Modal Content */}
-            <Dialog.Content className="fixed z-50 top-0 right-0 h-full w-[400px] hide-scrollbar transform  bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
+            <Dialog.Content className="fixed z-50 top-0 right-0 h-full w-full sm:w-[400px] hide-scrollbar transform  bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
               {/* Header */}
               <div className="flex items-center justify-between px-6 py-4">
                 <DropdownMenu.Root>

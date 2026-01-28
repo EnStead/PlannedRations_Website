@@ -29,7 +29,7 @@ const SideModal = ({ open, onOpenChange, selectedRow, title, onReset, onDelete }
         <Dialog.Overlay className="fixed inset-0 bg-black/30" />
 
         {/* Side Panel */}
-        <Dialog.Content className="fixed z-100 top-0 right-0 h-full w-[400px] hide-scrollbar bg-white shadow-lg p-6 overflow-y-auto transform transition-transform duration-300 ease-in-out">
+        <Dialog.Content className="fixed z-100 top-0 right-0 h-full w-full sm:w-[400px] hide-scrollbar bg-white shadow-lg p-6 overflow-y-auto transform transition-transform duration-300 ease-in-out">
           
             {/* Header */}
             <div className="flex items-center justify-between px-1 py-4">

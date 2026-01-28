@@ -230,7 +230,7 @@ useEffect(() => {
   return (
     <section>
       {/* UPLOAD AND TAG */}
-      <div className="grid grid-cols-2 gap-4 ">
+       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
         <div className="">
           <label
             className={`mb-2 block font-medium transition text-brand-cartext`}
@@ -277,7 +277,7 @@ useEffect(() => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* RECIPE NAME */}
         <div className="flex flex-col my-7">
           <label
@@ -396,7 +396,7 @@ useEffect(() => {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4 my-7">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-7">
         {/* BASE SERVINGS */}
         <div className="">
           <CustomSelect
@@ -461,7 +461,7 @@ useEffect(() => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 my-7">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-7">
         {/* COOKING TIME */}
         <div className="flex flex-col ">
           <label
@@ -523,7 +523,7 @@ useEffect(() => {
           {fixedNutrients.map((n) => (
             <div
               key={n.id}
-              className="grid grid-cols-2 gap-4 mb-4 items-center"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 items-center"
             >
               {/* Macros label - fixed */}
               <div>
@@ -584,7 +584,7 @@ useEffect(() => {
           {extraNutrients.map((n) => (
             <div
               key={n.id}
-              className="grid grid-cols-2 gap-4 mb-4 items-center"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 items-center"
             >
               <div>
                 <CustomSelect
@@ -670,7 +670,7 @@ useEffect(() => {
       </div>
 
       {/* ACTION BUTTONS */}
-      <div className="flex w-full justify-between mt-8">
+      <div className="flex flex-col sm:flex-row w-full justify-between mt-8 gap-4">
         <button
           type="button"
           onClick={handleNext}

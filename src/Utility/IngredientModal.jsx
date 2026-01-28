@@ -110,7 +110,7 @@ const IngredientModal = ({
     <Dialog.Root open={open} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/40 z-50" />
-        <Dialog.Content className="fixed z-60 top-1/2 left-1/2 w-[580px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl p-6 shadow-lg">
+        <Dialog.Content className="fixed z-60 top-1/2 left-1/2 w-[90%] max-w-[580px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl p-6 shadow-lg">
           <Dialog.Title className="text-xl text-center font-dash font-medium mb-1">
             {mode === "add" ? "Add Ingredient" : "Edit Ingredient"}
           </Dialog.Title>
@@ -187,7 +187,7 @@ const IngredientModal = ({
               />
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <CustomSelect
                 label="Category"
                 options={CATEGORIES}

@@ -73,7 +73,7 @@ const OTPModal = ({ open, setOpen, email, onVerified }) => {
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl p-8 text-center">
+        <Dialog.Content className="fixed top-1/2 left-1/2 w-[90%] max-w-[400px] -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl p-8 text-center">
           <Dialog.Title className="text-2xl font-semibold mb-4">Enter OTP</Dialog.Title>
           <Dialog.Description className="text-sm text-gray-600 mb-6">
             We sent a 4-digit verification code to <span className="font-medium">{email}</span>

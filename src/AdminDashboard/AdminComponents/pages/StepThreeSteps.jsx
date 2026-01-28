@@ -140,7 +140,7 @@ const StepThreeInstructions = ({
           </div>
           <div className="p-6">
             {/* TITLE + TIME */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div className="flex flex-col">
                 <label
                   className={`mb-1 font-medium transition ${step.title ? "text-brand-primary" : "text-brand-cartext"}`}
@@ -238,7 +238,7 @@ const StepThreeInstructions = ({
 
       {/* ACTIONS */}
       <div className="mt-10">
-        <div className="flex justify-between  gap-4">
+        <div className="flex flex-col sm:flex-row justify-between gap-4">
           <button
             onClick={() => setPublishModalOpen(true)}
             className="px-18 py-3 rounded-full bg-brand-secondary text-white font-bold"

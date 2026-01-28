@@ -48,16 +48,16 @@ const AdminLogin = () => {
 
 
   return (
-    <section className=' p-10 rounded-2xl' >
+    <section className='p-6 sm:p-10 rounded-2xl w-full max-w-md mx-auto' >
 
         <div>
-            <h2 className='font-semibold font-dash text-4xl text-brand-primary mb-12'  >
+            <h2 className='font-semibold font-dash text-3xl sm:text-4xl text-brand-primary mb-8 sm:mb-12 text-center sm:text-left'  >
                 Sign In to the Admin Console
             </h2>
             <form onSubmit={handleSubmit}  className="flex flex-col gap-4">
                 {/* Email */}
                 <div className="flex flex-col">
-                    <label htmlFor="email" className="mb-1 font-medium text-brand-cartext text-lg">Email Address</label>
+                    <label htmlFor="email" className="mb-1 font-medium text-brand-cartext text-base sm:text-lg">Email Address</label>
                     <input
                         id="email"
                         type="email"
@@ -66,13 +66,13 @@ const AdminLogin = () => {
                         value={form.email}
                         onChange={handleChange}
                         required
-                        className="border border-brand-planoff rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-planoff"
+                        className="border border-brand-planoff rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-planoff text-sm sm:text-base"
                     />
                 </div>
 
                 {/* Password */}
                 <div className="flex flex-col relative">
-                    <label className="mb-1 font-medium text-brand-cartext">Password</label>
+                    <label className="mb-1 font-medium text-brand-cartext text-base sm:text-lg">Password</label>
 
                     <input
                         type={showPassword ? "text" : "password"}
@@ -81,7 +81,7 @@ const AdminLogin = () => {
                         value={form.password}
                         onChange={handleChange}
                         required
-                        className="border border-brand-planoff rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-planoff pr-12"
+                        className="border border-brand-planoff rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-planoff pr-12 text-sm sm:text-base"
                     />
 
                     {/* Eye Icon */}
@@ -90,17 +90,17 @@ const AdminLogin = () => {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-4 top-[70%] -translate-y-1/2 text-gray-500 cursor-pointer"
                     >
-                        {showPassword ? <img src={Eye} /> : <img src={Eye} />}
+                        {showPassword ? <img src={Eye} className="w-5 h-5" /> : <img src={Eye} className="w-5 h-5" />}
                     </button>
                 </div>
-                <Link to="/admin/forgot-password" className='text-brand-secondary font-medium' >
+                <Link to="/admin/forgot-password" className='text-brand-secondary font-medium text-sm sm:text-base' >
                     Reset Password?
                 </Link>
 
                 <button
                     type="submit"
                     disabled={loading}
-                    className={`py-3 rounded-full font-bold mt-8 w-full text-white
+                    className={`py-3 rounded-full font-bold mt-6 sm:mt-8 w-full text-white text-sm sm:text-base
                         ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-brand-secondary"}
                     `}
                 >

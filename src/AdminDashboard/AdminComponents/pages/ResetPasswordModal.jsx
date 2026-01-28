@@ -44,7 +44,7 @@ const ResetPasswordModal = ({ open, onOpenChange, user }) => {
         <Dialog.Overlay className="fixed inset-0 bg-black/40 z-40" />
 
         {/* Modal */}
-        <Dialog.Content className="fixed z-50 top-1/2 left-1/2 w-[420px]
+        <Dialog.Content className="fixed z-50 top-1/2 left-1/2 w-[90%] max-w-[420px]
           -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl p-6 shadow-lg">
 
             {/* Header */}

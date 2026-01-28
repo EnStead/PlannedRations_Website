@@ -301,9 +301,9 @@ const AddRecipes = () => {
   }
 
   return (
-    <section className="bg-brand-background1 min-h-screen py-10 px-10 flex gap-8 ">
+    <section className="bg-brand-background1 min-h-screen py-6 px-4 sm:py-10 sm:px-10 flex flex-col lg:flex-row gap-8 ">
       {/* LEFT SECTION */}
-      <div className="w-[70%]">
+      <div className="w-full lg:w-[70%]">
         {/* TITLE SECTION */}
         <div className="flex items-center justify-between">
           <div>
@@ -392,7 +392,7 @@ const AddRecipes = () => {
       </div>
 
       {/* RIGHT SECTION */}
-      <div className="w-[30%]">
+      <div className="hidden lg:block lg:w-[30%]">
         <RightPanel step={step} data={recipeData} imagePreview={imagePreview} />
       </div>
     </section>
