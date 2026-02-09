@@ -1,26 +1,29 @@
 import { Link, useParams } from "react-router-dom";
-import Facebook from "../assets/Blogfacebook.svg"
-import BlogLink from "../assets/Bloglink.svg"
-import Linkedin from "../assets/Bloglinkedin.svg"
-import Twitter from "../assets/Blogtwitter.svg"
-import Instagram from "../assets/Bloginstagram.svg"
-import BlogBackground from "../assets/Blogbackground.jpg"
+import Facebook from "../assets/Blogfacebook.svg";
+import BlogLink from "../assets/Bloglink.svg";
+import Linkedin from "../assets/Bloglinkedin.svg";
+import Twitter from "../assets/Blogtwitter.svg";
+import Instagram from "../assets/Bloginstagram.svg";
+import BlogBackground from "../assets/Blogbackground.jpg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LogoLoader from "../Utility/LogoLoader";
+import { useToast } from "../AdminDashboard/Context/ToastProvider";
 
 const BlogPostSection = () => {
-
+  const { showToast } = useToast();
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [recommended, setRecommended] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loadingRecommend, setLoadingRecommend] = useState(true); 
+  const [loadingRecommend, setLoadingRecommend] = useState(true);
   // Fetch single blog
   const fetchBlog = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`https://api.plannedrations.com/api/web/get-blog/${id}`);
+      const res = await axios.get(
+        `https://api.plannedrations.com/api/web/get-blog/${id}`,
+      );
       setPost(res.data.data);
     } catch (err) {
       console.error("Error fetching blog:", err);
@@ -33,7 +36,9 @@ const BlogPostSection = () => {
   const fetchRecommended = async () => {
     try {
       setLoadingRecommend(true);
-      const res = await axios.get("https://api.plannedrations.com/api/web/get-recommend?limit=4");
+      const res = await axios.get(
+        "https://api.plannedrations.com/api/web/get-recommend?limit=4",
+      );
       let recommendedData = res.data.data || [];
 
       // Remove the current post from the recommended list
@@ -45,6 +50,15 @@ const BlogPostSection = () => {
     } finally {
       setLoadingRecommend(false);
     }
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    showToast({
+      title: "Success",
+      description: "Link copied to clipboard!",
+      variant: "success",
+    });
   };
 
   useEffect(() => {
@@ -67,21 +81,18 @@ const BlogPostSection = () => {
   if (!post) {
     return (
       <div className="text-center py-20 mt-20 text-brand-head">
-        <p className="font-bold text-3xl mb-8" >Post not found.</p>
+        <p className="font-bold text-3xl mb-8">Post not found.</p>
         <Link to="/blog" className="text-brand-orange underline">
           Go back
         </Link>
       </div>
     );
   }
-    
 
   return (
     <div className="font-sans text-brand-text">
       {/* --- HERO SECTION --- */}
-      <section
-        className="relative h-[70vh] w-full  overflow-hidden"
-      >
+      <section className="relative h-[70vh] w-full  overflow-hidden">
         <img
           src={post.thumbnail_url || post.thumbnailUrl}
           alt={post.title}
@@ -89,8 +100,12 @@ const BlogPostSection = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
         <div className="absolute bottom-10 left-10 text-white max-w-3xl">
-          <h1 className=" text-3xl sm:text-5xl font-bold leading-tight mb-2 ">{post.title}</h1>
-          <p className="text-sm opacity-80"> {new Date(post.created_at).toLocaleDateString("en-US", {
+          <h1 className=" text-3xl sm:text-5xl font-bold leading-tight mb-2 ">
+            {post.title}
+          </h1>
+          <p className="text-sm opacity-80">
+            {" "}
+            {new Date(post.created_at).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",
@@ -100,7 +115,7 @@ const BlogPostSection = () => {
         </div>
       </section>
 
-      {/* --- CONTENT + SIDEBAR --- */} 
+      {/* --- CONTENT + SIDEBAR --- */}
       <section className=" grid grid-cols-1 md:grid-cols-3 gap-10 py-20 px-7 xsm:px-15">
         {/* Main Content */}
         <div className="md:col-span-2">
@@ -117,18 +132,35 @@ const BlogPostSection = () => {
               Share This Blog
             </h3>
             <div className="flex gap-4 text-brand-cardhead text-2xl">
-              <img src={BlogLink} className="  transition" />
+              <img
+                src={BlogLink}
+                className="cursor-pointer hover:scale-110 transition"
+                onClick={handleCopyLink}
+                alt="Copy Link"
+              />
               <Link>
-                <img src={Facebook} className="cursor-pointer hover:scale-200 transition" />              
+                <img
+                  src={Facebook}
+                  className="cursor-pointer hover:scale-200 transition"
+                />
               </Link>
               <Link>
-                <img src={Linkedin} className="cursor-pointer hover:scale-200 transition" />              
+                <img
+                  src={Linkedin}
+                  className="cursor-pointer hover:scale-200 transition"
+                />
               </Link>
               <Link>
-                <img src={Twitter} className="cursor-pointer hover:scale-200 transition" />              
+                <img
+                  src={Twitter}
+                  className="cursor-pointer hover:scale-200 transition"
+                />
               </Link>
               <Link to={`https://www.instagram.com/plannedrations`}>
-                <img src={Instagram} className="cursor-pointer hover:scale-200 transition" />              
+                <img
+                  src={Instagram}
+                  className="cursor-pointer hover:scale-200 transition"
+                />
               </Link>
             </div>
           </div>
@@ -140,53 +172,57 @@ const BlogPostSection = () => {
         <h2 className=" text-xl sm:text-3xl font-bold mb-10 text-brand-cardhead">
           Recommended for you
         </h2>
-        {
-          loadingRecommend ? (   <p className="text-center text-brand-head font-medium text-xl">Loading recommendations...</p>
-          ) : recommended.length === 0 ? (
-            <p className="text-center text-brand-head font-medium text-xl">No recommendations available.</p>
-          ) : (
-
-            <div className="grid ssm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-              {recommended.map((post) => (
-                <div
-                    key={post.id}
-                    className="bg-transparent overflow-hidden flex flex-col"
-                >
+        {loadingRecommend ? (
+          <p className="text-center text-brand-head font-medium text-xl">
+            Loading recommendations...
+          </p>
+        ) : recommended.length === 0 ? (
+          <p className="text-center text-brand-head font-medium text-xl">
+            No recommendations available.
+          </p>
+        ) : (
+          <div className="grid ssm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {recommended.map((post) => (
+              <Link
+                to={`/blog/${post.id}`}
+                key={post.id}
+                className="bg-transparent overflow-hidden flex flex-col transition-all duration-300 hover:scale-105 active:scale-95"
+              >
                 <img
-                    src={post.thumbnail_url || post.thumbnailUrl}
-                    alt={post.title}
-                    className="w-full h-40 ssm:h-33 xsm:h-43 rounded-2xl object-cover"
+                  src={post.thumbnail_url || post.thumbnailUrl}
+                  alt={post.title}
+                  className="w-full h-40 ssm:h-33 xsm:h-43 rounded-2xl object-cover"
                 />
 
                 <div className="flex flex-col flex-grow py-3">
-                    <p className=" text-[10px] ml:text-xs text-brand-orange font-medium mb-1">              {new Date(post.created_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}{" "}
-                      &#8226; {post.reading_time}
-                    </p>
-                    <h3 className=" text-base ml:text-xl font-semibold mb-1 text-brand-cardhead font-heading">
-                        {post.title}
-                    </h3>
+                  <p className=" text-[10px] ml:text-xs text-brand-orange font-medium mb-1">
+                    {" "}
+                    {new Date(post.created_at).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}{" "}
+                    &#8226; {post.reading_time}
+                  </p>
+                  <h3 className=" text-base ml:text-xl font-semibold mb-1 text-brand-cardhead font-heading">
+                    {post.title}
+                  </h3>
 
-                    {/* Spacer to push button down */}
-                    <div className="mt-auto border-t border-brand-planoff pt-1 ">
-                        <Link to={`/blog/${post.id}`} className="w-full cursor-pointer flex justify-between items-center text-sm font-bold text-brand-offpurple">
-                            <div>Read Blog</div>
-                            <div className="text-2xl">→</div>
-                        </Link>
+                  {/* Spacer to push button down */}
+                  <div className="mt-auto border-t border-brand-planoff pt-1 ">
+                    <div className="w-full cursor-pointer flex justify-between items-center text-sm font-bold text-brand-offpurple">
+                      <div>Read Blog</div>
+                      <div className="text-2xl">→</div>
                     </div>
+                  </div>
                 </div>
-                </div>
-              ))}
-            </div>
-
-          )
-        }
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default BlogPostSection
+export default BlogPostSection;

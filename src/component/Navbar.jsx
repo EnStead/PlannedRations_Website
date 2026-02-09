@@ -46,7 +46,7 @@ const Navbar = ({isScrolled, setIsScrolled, forceFixed}) => {
           : "relative bg-transparent h-20" 
       }`}
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
+      <div className="max-w-7xl cnt_nav mx-auto flex justify-between items-center p-4">
         <img src={Logo} alt='Logo' onClick={() => navigate("/")} className="cursor-pointer" />
         {/* HIDEN SECTION */}
         {/* <ul className={`hidden gap-7 text-sm ml:flex sm:text-xs lg:gap-10 font-normal py-4 px-5 rounded-2xl lg:text-base transition-all duration-300

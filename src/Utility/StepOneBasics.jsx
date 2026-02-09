@@ -27,6 +27,8 @@ const StepOneBasics = ({ onNext, onSaveDraft, onChange, initialData, initialImag
     name: initialData?.name || "",
     description: initialData?.description || "",
     tags: initialData?.tags || [],
+    cuisine: initialData?.cuisine || [],
+    diet_type: initialData?.diet_type || "",
     base_servings: initialData?.base_servings || "",
     calories: initialData?.calories || "",
     cooking_time: initialData?.cooking_time || "",
@@ -38,6 +40,8 @@ const StepOneBasics = ({ onNext, onSaveDraft, onChange, initialData, initialImag
   const fileRef = useRef(null);
   const [tagsOpen, setTagsOpen] = useState(false);
   const tagsRef = useRef(null);
+  const [cuisineOpen, setCuisineOpen] = useState(false);
+  const cuisineRef = useRef(null);
 
   const initialFixedNutrients = [
     { id: "protein", label: "Protein", value: "", unit: "g" },
@@ -54,6 +58,8 @@ const StepOneBasics = ({ onNext, onSaveDraft, onChange, initialData, initialImag
     return initialFixedNutrients;
   });
   const [availableTags, setAvailableTags] = useState([]);
+  const [availableCuisines, setAvailableCuisines] = useState([]);
+  const [availableDiets, setAvailableDiets] = useState([]);
 
   // Dynamic additional nutrients
   const [extraNutrients, setExtraNutrients] = useState(() => {
@@ -75,15 +81,21 @@ const StepOneBasics = ({ onNext, onSaveDraft, onChange, initialData, initialImag
 
   // Fetch tags from backend
   useEffect(() => {
-    const fetchTags = async () => {
+    const fetchData = async () => {
       try {
-        const res = await api.get("/admin/tags/list/all?applies_to=recipe");
-        setAvailableTags(res.data.data || []);
+        const [tagsRes, cuisinesRes, dietsRes] = await Promise.all([
+          api.get("/admin/tags/list/all?applies_to=recipe"),
+          api.get("/admin/recipes/cuisines/list"),
+          api.get("/admin/recipes/diet-type/list"),
+        ]);
+        setAvailableTags(tagsRes.data.data || []);
+        setAvailableCuisines(cuisinesRes.data.data || []);
+        setAvailableDiets(dietsRes.data.data || []);
       } catch (err) {
-        console.error("Failed to fetch tags", err);
+        console.error("Failed to fetch data", err);
       }
     };
-    fetchTags();
+    fetchData();
   }, []);
 
   // handle image selection
@@ -113,6 +125,12 @@ useEffect(() => {
   const handleFileInputChange = (e) => {
     const f = e.target.files?.[0];
     onDropOrSelectFile(f);
+  };
+
+  const formatOption = (str) => {
+    return str
+      ?.replace(/[_-]/g, " ")
+      .replace(/\b\w/g, (l) => l.toUpperCase());
   };
 
   // Sync changes with parent for Live Preview & Unsaved Changes check
@@ -146,6 +164,9 @@ useEffect(() => {
       if (tagsRef.current && !tagsRef.current.contains(event.target)) {
         setTagsOpen(false);
       }
+      if (cuisineRef.current && !cuisineRef.current.contains(event.target)) {
+        setCuisineOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -158,6 +179,17 @@ useEffect(() => {
         return { ...prev, tags: currentTags.filter((id) => id !== tagId) };
       } else {
         return { ...prev, tags: [...currentTags, tagId] };
+      }
+    });
+  };
+
+  const toggleCuisine = (cuisine) => {
+    setForm((prev) => {
+      const current = Array.isArray(prev.cuisine) ? prev.cuisine : [];
+      if (current.includes(cuisine)) {
+        return { ...prev, cuisine: current.filter((c) => c !== cuisine) };
+      } else {
+        return { ...prev, cuisine: [...current, cuisine] };
       }
     });
   };
@@ -394,6 +426,97 @@ useEffect(() => {
               : "border-brand-planoff"
           } bg-brand-carhead px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand-planoff resize-none`}
         />
+      </div>
+
+      {/* CUISINE AND DIET */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-7">
+        {/* CUISINE TYPE (Multi-select) */}
+        <div className="flex flex-col relative" ref={cuisineRef}>
+          <label
+            className={`mb-1 font-medium transition ${
+              form.cuisine?.length > 0
+                ? "text-brand-primary"
+                : "text-brand-cartext"
+            }`}
+          >
+            Cuisine Type
+          </label>
+          <button
+            type="button"
+            onClick={() => setCuisineOpen(!cuisineOpen)}
+            className={`border ${
+              form.cuisine?.length > 0
+                ? "border-brand-primary"
+                : "border-brand-planoff"
+            } bg-brand-carhead rounded-full px-4 py-3 flex justify-between items-center focus:outline-none`}
+          >
+            <span
+              className={`truncate ${
+                form.cuisine?.length > 0
+                  ? "text-brand-primary"
+                  : "text-brand-cartext"
+              }`}
+            >
+              {form.cuisine?.length > 0
+                ? form.cuisine
+                    .map((c) => formatOption(c))
+                    .join(", ")
+                : "Select cuisine..."}
+            </span>
+            <ChevronDown
+              size={18}
+              className={
+                form.cuisine?.length > 0
+                  ? "text-brand-primary"
+                  : "text-brand-cartext"
+              }
+            />
+          </button>
+
+          {cuisineOpen && (
+            <div className="absolute top-full left-0 w-full mt-1 bg-white border border-brand-planoff rounded-xl shadow-lg z-50 max-h-60 overflow-y-auto p-2">
+              {availableCuisines.length > 0 ? (
+                availableCuisines.map((c) => (
+                  <div
+                    key={c}
+                    onClick={() => toggleCuisine(c)}
+                    className="flex items-center justify-between px-4 py-2 hover:bg-brand-secondary/30 rounded-lg cursor-pointer transition"
+                  >
+                    <span className="text-brand-subtext">
+                      {formatOption(c)}
+                    </span>
+                    {form.cuisine.includes(c) && (
+                      <Check size={16} className="text-brand-secondary" />
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="px-4 py-2 text-brand-muted text-sm">
+                  No cuisines available
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* DIET TYPE (Single Select) */}
+        <div className="">
+          <CustomSelect
+            label="Diet Type"
+            classNameLabel={
+              form.diet_type ? "text-brand-primary" : "text-brand-cartext"
+            }
+            classNameSelect={
+              form.diet_type
+                ? "border-brand-primary"
+                : "border-brand-planoff"
+            }
+            options={availableDiets}
+            value={form.diet_type}
+            onChange={(val) => setForm({ ...form, diet_type: val })}
+            formatOption={formatOption}
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-7">

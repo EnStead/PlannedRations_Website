@@ -36,14 +36,14 @@ function AppContent() {
   }, []);
 
   return (
-    <>
+    <ToastProvider>
       <ScrollToTop />
 
       <Routes>
         <Route
           path="/"
           element={
-            <div className="bg-brand-accent min-h-screen">
+            <div className="bg-brand-accent min-h-screen cnt">
               <Layout
                 isScrolled={isScrolled}
                 setIsScrolled={setIsScrolled}
@@ -66,9 +66,7 @@ function AppContent() {
           path="/admin/*"
           element={
             <AuthProvider>
-              <ToastProvider>
-                <AdminDashboard isScrolled={isScrolled} />
-              </ToastProvider>
+              <AdminDashboard isScrolled={isScrolled} />
             </AuthProvider>
           }
         />
@@ -76,32 +74,36 @@ function AppContent() {
         <Route
           path="/blog"
           element={
-            <Layout
-              isScrolled={isScrolled}
-              setIsScrolled={setIsScrolled}
-              Footerbg={BlogFooterbg}
-              LeftCard="#F9A720"
-              Cursors={BlogCursor}
-              Tooltip="#9E78F6"
-              showFooter={false}
-            >
-              <Blog />
-            </Layout>
+            <div className="cnt">
+              <Layout
+                isScrolled={isScrolled}
+                setIsScrolled={setIsScrolled}
+                Footerbg={BlogFooterbg}
+                LeftCard="#F9A720"
+                Cursors={BlogCursor}
+                Tooltip="#9E78F6"
+                showFooter={false}
+              >
+                <Blog />
+              </Layout>
+            </div>
           }
         />
         <Route
           path="/blog/:id"
           element={
-            <Layout
-              Footerbg={BlogFooterbg}
-              LeftCard="#F9A720"
-              Cursors={BlogCursor}
-              Tooltip="#9E78F6"
-              forceFixed={true}
-              showFooter={false}
-            >
-              <BlogPostSection />
-            </Layout>
+            <div className="cnt">
+              <Layout
+                Footerbg={BlogFooterbg}
+                LeftCard="#F9A720"
+                Cursors={BlogCursor}
+                Tooltip="#9E78F6"
+                forceFixed={true}
+                showFooter={false}
+              >
+                <BlogPostSection />
+              </Layout>
+            </div>
           }
         />
         <Route
@@ -135,7 +137,7 @@ function AppContent() {
         <Route
           path="/contact"
           element={
-            <div className="bg-brand-background1">
+            <div className="bg-brand-background1 cnt">
               <Layout
                 isScrolled={isScrolled}
                 setIsScrolled={setIsScrolled}
@@ -151,7 +153,7 @@ function AppContent() {
           }
         />
       </Routes>
-    </>
+    </ToastProvider>
   );
 }
 

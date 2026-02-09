@@ -52,7 +52,8 @@ const IngredientModal = ({
       setForm({
         name: initialValues.name || "",
         category: initialValues.category || "",
-        default_unit: initialValues.default_unit || initialValues.defaultUnit || "",
+        default_unit:
+          initialValues.default_unit || initialValues.defaultUnit || "",
         description: initialValues.description || "",
       });
       setImagePreview(initialValues.image_url || null);
@@ -249,8 +250,8 @@ const IngredientModal = ({
                   ? "Adding..."
                   : "Updating..."
                 : mode === "add"
-                ? "Add Ingredient"
-                : "Update Ingredient"}
+                  ? "Add Ingredient"
+                  : "Update Ingredient"}
             </button>
           </form>
         </Dialog.Content>

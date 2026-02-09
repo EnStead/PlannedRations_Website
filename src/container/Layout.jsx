@@ -6,7 +6,7 @@ const Layout = ({ children,isScrolled,setIsScrolled,Footerbg,LeftCard,Cursors,To
   return (
     <>
       <Navbar isScrolled={isScrolled} setIsScrolled={setIsScrolled} forceFixed={forceFixed} />
-        <main>{children}</main>
+        <main className='cnt'>{children}</main>
       <FooterMisc/>
       {showFooter && <Footer Footerbg={Footerbg} LeftCard={LeftCard} Cursor={Cursors} Tooltip={Tooltip} />}
     </>

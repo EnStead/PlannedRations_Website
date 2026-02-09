@@ -23,6 +23,8 @@ const AddRecipes = () => {
     name: "",
     description: "",
     tags: [],
+    cuisine: [],
+    diet_type: "",
     base_servings: "",
     calories: "",
     cooking_time: "",
@@ -58,6 +60,12 @@ const AddRecipes = () => {
             name: data.name || "",
             description: data.description || "",
             tags: data.tags ? data.tags.map((t) => t.id) : [],
+            cuisine: data.cuisine
+              ? Array.isArray(data.cuisine)
+                ? data.cuisine
+                : [data.cuisine]
+              : [],
+            diet_type: data.diet_type || "",
             base_servings: data.base_servings ? String(data.base_servings) : "",
             calories: data.calories ? String(data.calories) : "",
             cooking_time: data.cooking_time ? String(data.cooking_time) : "",
@@ -113,6 +121,8 @@ const AddRecipes = () => {
         name: "",
         description: "",
         tags: [],
+        cuisine: [],
+        diet_type: "",
         base_servings: "",
         calories: "",
         cooking_time: "",
@@ -133,6 +143,8 @@ const AddRecipes = () => {
       recipeData.name ||
       recipeData.description ||
       recipeData.tags.length > 0 ||
+      recipeData.cuisine.length > 0 ||
+      recipeData.diet_type ||
       recipeData.base_servings ||
       recipeData.calories ||
       recipeData.cooking_time ||
@@ -237,11 +249,16 @@ const AddRecipes = () => {
       formData.append("calories", payload.calories);
       formData.append("cooking_time", payload.cooking_time);
       formData.append("difficulty", payload.difficulty);
+      formData.append("diet_type", payload.diet_type);
       formData.append("is_draft", payload.is_draft ? "1" : "0");
 
       // Append Arrays using bracket notation for FormData
       if (Array.isArray(payload.tags)) {
         payload.tags.forEach((tag) => formData.append("tags[]", tag));
+      }
+
+      if (Array.isArray(payload.cuisine)) {
+        payload.cuisine.forEach((c) => formData.append("cuisine[]", c));
       }
 
       // Helper to append array of objects
