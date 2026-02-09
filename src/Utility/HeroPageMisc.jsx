@@ -20,10 +20,10 @@ const HeroPageMisc = () => {
                     Personalized meal planning that fits your pantry, goals, and budget.
                 </p>
                 <div className="flex flex-col w-50 mx-auto  ssm:w-fit ssm:flex-row gap-7 ssm:gap-10 justify-center">
-                    <button  className="bg-[#333333] text-white px-10 py-4 rounded-4xl font-semibold text-sm">
+                    <div  className="bg-[#333333] text-white px-10 py-4 rounded-4xl font-semibold text-sm">
                         Coming Soon
-                    </button>
-                    <button onClick={() => navigate("/blog")} className=" border-2 bg-brand-accent  border-brand-head text-brand-head px-10 py-4 rounded-4xl font-semibold text-sm cursor-pointer">
+                    </div>
+                    <button onClick={() => navigate("/blog")} className=" border-2 bg-brand-accent  border-brand-head text-brand-head px-10 py-4 rounded-4xl font-semibold text-sm cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
                         Visit Our Blog
                     </button>
                 </div>

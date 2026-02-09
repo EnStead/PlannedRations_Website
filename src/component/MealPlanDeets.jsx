@@ -91,7 +91,7 @@ const MealPlanDeets = () => {
           <p className="font-sans text-brand-subtext font-normal text-lg sm:text-2xl  mb-6">
             Get a meal plan tailored to your lifestyle. Whether for workouts, family, or a student budget—we’ve got you.
           </p>
-          <button  onClick={() => setIsOpen(true)} className="bg-brand-secondary text-white px-7 sm:px-10 py-4 rounded-4xl font-medium text-base sm:text-lg cursor-pointer ">
+          <button  onClick={() => setIsOpen(true)} className="bg-brand-secondary text-white px-7 sm:px-10 py-4 rounded-4xl font-medium text-base sm:text-lg cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 ">
             Try Meal Plan
           </button>
           

@@ -61,6 +61,37 @@ const BlogPostSection = () => {
     });
   };
 
+  const shareToSocial = (platform) => {
+    const url = encodeURIComponent(window.location.href);
+    const title = post ? encodeURIComponent(post.title) : "";
+    let shareUrl = "";
+
+    switch (platform) {
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case "linkedin":
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+        break;
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+        break;
+      case "instagram":
+        navigator.clipboard.writeText(window.location.href);
+        showToast({
+          title: "Success",
+          description: "Link copied! Paste it on Instagram to share.",
+          variant: "success",
+        });
+        shareUrl = "https://www.instagram.com/";
+        break;
+      default:
+        return;
+    }
+
+    window.open(shareUrl, "_blank", "width=600,height=400");
+  };
+
   useEffect(() => {
     fetchBlog();
     fetchRecommended();
@@ -138,30 +169,30 @@ const BlogPostSection = () => {
                 onClick={handleCopyLink}
                 alt="Copy Link"
               />
-              <Link>
-                <img
-                  src={Facebook}
-                  className="cursor-pointer hover:scale-200 transition"
-                />
-              </Link>
-              <Link>
-                <img
-                  src={Linkedin}
-                  className="cursor-pointer hover:scale-200 transition"
-                />
-              </Link>
-              <Link>
-                <img
-                  src={Twitter}
-                  className="cursor-pointer hover:scale-200 transition"
-                />
-              </Link>
-              <Link to={`https://www.instagram.com/plannedrations`}>
-                <img
-                  src={Instagram}
-                  className="cursor-pointer hover:scale-200 transition"
-                />
-              </Link>
+              <img
+                src={Facebook}
+                className="cursor-pointer hover:scale-110 transition"
+                onClick={() => shareToSocial("facebook")}
+                alt="Share on Facebook"
+              />
+              <img
+                src={Linkedin}
+                className="cursor-pointer hover:scale-110 transition"
+                onClick={() => shareToSocial("linkedin")}
+                alt="Share on LinkedIn"
+              />
+              <img
+                src={Twitter}
+                className="cursor-pointer hover:scale-110 transition"
+                onClick={() => shareToSocial("twitter")}
+                alt="Share on Twitter"
+              />
+              <img
+                src={Instagram}
+                className="cursor-pointer hover:scale-110 transition"
+                onClick={() => shareToSocial("instagram")}
+                alt="Instagram"
+              />
             </div>
           </div>
         </div>

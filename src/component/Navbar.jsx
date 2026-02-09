@@ -60,7 +60,7 @@ const Navbar = ({isScrolled, setIsScrolled, forceFixed}) => {
           <li className="cursor-pointer" onClick={() => navigate("/blog")} >Blogs</li>
           <li className="cursor-pointer" onClick={() => navigate("/contact")} >Contact Us</li>
         </ul> */}
-        <button onClick={() => navigate("/contact")} className="bg-brand-secondary text-white px-10 py-4 rounded-2xl font-medium text-sm cursor-pointer">
+        <button onClick={() => navigate("/contact")} className="bg-brand-secondary text-white px-10 py-4 rounded-2xl font-medium text-sm cursor-pointer transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0">
           {/* Download App */}
           Contact Us
         </button>
