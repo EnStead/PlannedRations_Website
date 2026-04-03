@@ -1,4 +1,3 @@
-import Menu from "../assets/Menu.svg";
 import Pen from "../assets/Pen.svg";
 import Del from "../assets/Del.svg";
 import { useEffect, useRef, useState } from "react";
@@ -14,7 +13,15 @@ const ReusableTable = ({
   onAction,
 }) => {
   const [openMenu, setOpenMenu] = useState(null);
+  const [animateIn, setAnimateIn] = useState(false);
   const menuRef = useRef(null);
+
+  useEffect(() => {
+    setAnimateIn(false);
+    const frame = requestAnimationFrame(() => setAnimateIn(true));
+    return () => cancelAnimationFrame(frame);
+  }, [data]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -58,12 +65,15 @@ const ReusableTable = ({
           {data.map((row, index) => (
             <tr
               key={index}
-              className={`${index % 2 === 0 ? "bg-brand-carhead" : "bg-transparent"} text-brand-subtext text-sm`}
+              className={`group relative ${openMenu === index ? "z-30" : "z-0"} ${index % 2 === 0 ? "bg-brand-carhead" : "bg-transparent"} text-brand-subtext text-sm transition-all duration-300 ease-out ${
+                animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+              }`}
+              style={{ transitionDelay: `${Math.min(index * 35, 280)}ms` }}
             >
               {columns.map((col) => (
                 <td
                   key={col.accessor}
-                  className={`py-4 px-10 ${col.className || ""}`}
+                  className={`py-4 px-10 transition-colors duration-200 group-hover:bg-brand-secondary/5 ${col.className || ""}`}
                 >
                   {col.render
                     ? col.render(row[col.accessor], row)
@@ -72,7 +82,7 @@ const ReusableTable = ({
               ))}
 
               {actions !== "none" && (
-                <td className="py-2 px-1 w-[80px] align-middle text-right relative">
+                <td className="py-2 px-1 w-[80px] align-middle text-right relative overflow-visible z-40">
                   {actions === "menu" && (
                     <button
                       onClick={() =>
@@ -87,7 +97,9 @@ const ReusableTable = ({
                   {openMenu === index && (
                     <div
                       ref={menuRef}
-                      className="absolute right-0 mt-2 w-50 bg-white  rounded-lg shadow-lg p-2 z-50"
+                      className={`absolute right-0 w-50 bg-white rounded-lg shadow-lg p-2 z-[120] ${
+                        index >= data.length - 3 ? "bottom-full mb-2" : "top-full mt-2"
+                      }`}
                     >
                       {menuItems?.map((item, idx) => (
                         <button

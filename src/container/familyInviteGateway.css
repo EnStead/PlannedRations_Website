@@ -1,0 +1,95 @@
+.phone-shell {
+  transform: translateZ(0);
+}
+
+.invite-card-enter {
+  animation: inviteRise 420ms ease-in-out both;
+}
+
+.family-shimmer {
+  background: linear-gradient(110deg, #151515 20%, #c2abf9 45%, #151515 70%);
+  background-size: 240% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmerIn 1.5s ease-in-out 1 forwards;
+}
+
+.morph-fade {
+  display: inline-block;
+  animation: morphFade 300ms ease-in-out;
+}
+
+.food-float {
+  animation: foodDrift 3.8s ease-in-out infinite alternate;
+}
+
+.primary-pulse {
+  animation: pulseSoft 6s ease-in-out infinite;
+}
+
+.primary-pulse.no-motion {
+  animation: none;
+}
+
+@keyframes inviteRise {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmerIn {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -40% 0;
+    color: #151515;
+  }
+}
+
+@keyframes morphFade {
+  0% {
+    opacity: 0.2;
+    filter: blur(1.5px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes foodDrift {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseSoft {
+  0%,
+  84%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(21, 21, 21, 0);
+  }
+  90% {
+    box-shadow: 0 0 0 8px rgba(21, 21, 21, 0.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .invite-card-enter,
+  .family-shimmer,
+  .morph-fade,
+  .food-float,
+  .primary-pulse {
+    animation: none !important;
+  }
+}

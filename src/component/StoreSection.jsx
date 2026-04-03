@@ -20,8 +20,8 @@ const StoreSection = () => {
                         Join thousands already planning smarter and eating better with PlannedRations. Your free trial starts today.
                     </p>
                     <div className=" relative  flex  gap-4 mt-3 mb-4 ">
-                        <img src={PlayStore} alt="Google Play" className=" h-9 xsm:h-14  lg:w-fit lg:m-auto" />
-                        <img src={AppStore} alt="App Store" className=" h-9 xsm:h-14  lg:w-fit lg:m-auto" />
+                        <img src={PlayStore} alt="Google Play" className=" h-9 xsm:h-14  lg:w-fit lg:m-auto transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer" />
+                        <img src={AppStore} alt="App Store" className=" h-9 xsm:h-14  lg:w-fit lg:m-auto transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer" />
                     </div>
                     <div className=' flex lg:hidden '>
                         <img

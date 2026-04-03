@@ -1,7 +1,6 @@
 import { Check, ChevronDown, CloudUpload, Plus, X } from "lucide-react";
 import CustomSelect from "./CustomSelect";
 import { useEffect, useRef, useState } from "react";
-import * as Select from "@radix-ui/react-select";
 import api from "./api";
 import { useToast } from "../AdminDashboard/Context/ToastProvider";
 
@@ -27,8 +26,12 @@ const StepOneBasics = ({ onNext, onSaveDraft, onChange, initialData, initialImag
     name: initialData?.name || "",
     description: initialData?.description || "",
     tags: initialData?.tags || [],
-    cuisine: initialData?.cuisine || [],
-    diet_type: initialData?.diet_type || "",
+    cuisine: initialData?.cuisine || "",
+    diet_type: Array.isArray(initialData?.diet_type)
+      ? initialData.diet_type
+      : initialData?.diet_type
+        ? [initialData.diet_type]
+        : [],
     base_servings: initialData?.base_servings || "",
     calories: initialData?.calories || "",
     cooking_time: initialData?.cooking_time || "",
@@ -40,8 +43,8 @@ const StepOneBasics = ({ onNext, onSaveDraft, onChange, initialData, initialImag
   const fileRef = useRef(null);
   const [tagsOpen, setTagsOpen] = useState(false);
   const tagsRef = useRef(null);
-  const [cuisineOpen, setCuisineOpen] = useState(false);
-  const cuisineRef = useRef(null);
+  const [dietOpen, setDietOpen] = useState(false);
+  const dietRef = useRef(null);
 
   const initialFixedNutrients = [
     { id: "protein", label: "Protein", value: "", unit: "g" },
@@ -164,8 +167,8 @@ useEffect(() => {
       if (tagsRef.current && !tagsRef.current.contains(event.target)) {
         setTagsOpen(false);
       }
-      if (cuisineRef.current && !cuisineRef.current.contains(event.target)) {
-        setCuisineOpen(false);
+      if (dietRef.current && !dietRef.current.contains(event.target)) {
+        setDietOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -183,13 +186,13 @@ useEffect(() => {
     });
   };
 
-  const toggleCuisine = (cuisine) => {
+  const toggleDiet = (diet) => {
     setForm((prev) => {
-      const current = Array.isArray(prev.cuisine) ? prev.cuisine : [];
-      if (current.includes(cuisine)) {
-        return { ...prev, cuisine: current.filter((c) => c !== cuisine) };
+      const current = Array.isArray(prev.diet_type) ? prev.diet_type : [];
+      if (current.includes(diet)) {
+        return { ...prev, diet_type: current.filter((d) => d !== diet) };
       } else {
-        return { ...prev, cuisine: [...current, cuisine] };
+        return { ...prev, diet_type: [...current, diet] };
       }
     });
   };
@@ -430,92 +433,88 @@ useEffect(() => {
 
       {/* CUISINE AND DIET */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-7">
-        {/* CUISINE TYPE (Multi-select) */}
-        <div className="flex flex-col relative" ref={cuisineRef}>
+        {/* CUISINE TYPE (Single Select) */}
+        <div className="">
+          <CustomSelect
+            label="Cuisine Type"
+            classNameLabel={
+              form.cuisine ? "text-brand-primary" : "text-brand-cartext"
+            }
+            classNameSelect={
+              form.cuisine ? "border-brand-primary" : "border-brand-planoff"
+            }
+            options={availableCuisines}
+            value={form.cuisine}
+            onChange={(val) => setForm({ ...form, cuisine: val })}
+            formatOption={formatOption}
+          />
+        </div>
+
+        {/* DIET TYPE (Multi-select) */}
+        <div className="flex flex-col relative" ref={dietRef}>
           <label
             className={`mb-1 font-medium transition ${
-              form.cuisine?.length > 0
+              form.diet_type?.length > 0
                 ? "text-brand-primary"
                 : "text-brand-cartext"
             }`}
           >
-            Cuisine Type
+            Diet Type
           </label>
           <button
             type="button"
-            onClick={() => setCuisineOpen(!cuisineOpen)}
+            onClick={() => setDietOpen(!dietOpen)}
             className={`border ${
-              form.cuisine?.length > 0
+              form.diet_type?.length > 0
                 ? "border-brand-primary"
                 : "border-brand-planoff"
             } bg-brand-carhead rounded-full px-4 py-3 flex justify-between items-center focus:outline-none`}
           >
             <span
               className={`truncate ${
-                form.cuisine?.length > 0
+                form.diet_type?.length > 0
                   ? "text-brand-primary"
                   : "text-brand-cartext"
               }`}
             >
-              {form.cuisine?.length > 0
-                ? form.cuisine
-                    .map((c) => formatOption(c))
-                    .join(", ")
-                : "Select cuisine..."}
+              {form.diet_type?.length > 0
+                ? form.diet_type.map((d) => formatOption(d)).join(", ")
+                : "Select diet type..."}
             </span>
             <ChevronDown
               size={18}
               className={
-                form.cuisine?.length > 0
+                form.diet_type?.length > 0
                   ? "text-brand-primary"
                   : "text-brand-cartext"
               }
             />
           </button>
 
-          {cuisineOpen && (
+          {dietOpen && (
             <div className="absolute top-full left-0 w-full mt-1 bg-white border border-brand-planoff rounded-xl shadow-lg z-50 max-h-60 overflow-y-auto p-2">
-              {availableCuisines.length > 0 ? (
-                availableCuisines.map((c) => (
+              {availableDiets.length > 0 ? (
+                availableDiets.map((d) => (
                   <div
-                    key={c}
-                    onClick={() => toggleCuisine(c)}
+                    key={d}
+                    onClick={() => toggleDiet(d)}
                     className="flex items-center justify-between px-4 py-2 hover:bg-brand-secondary/30 rounded-lg cursor-pointer transition"
                   >
                     <span className="text-brand-subtext">
-                      {formatOption(c)}
+                      {formatOption(d)}
                     </span>
-                    {form.cuisine.includes(c) && (
+                    {form.diet_type.includes(d) && (
                       <Check size={16} className="text-brand-secondary" />
                     )}
                   </div>
                 ))
               ) : (
                 <div className="px-4 py-2 text-brand-muted text-sm">
-                  No cuisines available
+                  No diet types available
                 </div>
               )}
             </div>
           )}
-        </div>
-
-        {/* DIET TYPE (Single Select) */}
-        <div className="">
-          <CustomSelect
-            label="Diet Type"
-            classNameLabel={
-              form.diet_type ? "text-brand-primary" : "text-brand-cartext"
-            }
-            classNameSelect={
-              form.diet_type
-                ? "border-brand-primary"
-                : "border-brand-planoff"
-            }
-            options={availableDiets}
-            value={form.diet_type}
-            onChange={(val) => setForm({ ...form, diet_type: val })}
-            formatOption={formatOption}
-          />
         </div>
       </div>
 

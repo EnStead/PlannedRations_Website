@@ -87,14 +87,21 @@ const TestimonialSection = () => {
 
             </div>
 
+            <style>
+                {`
+                    .testimonial-swiper .swiper-wrapper {
+                        transition-timing-function: linear !important;
+                    }
+                `}
+            </style>
             {/* Carousel */}
             <Swiper
                 modules={[Navigation, Pagination,Autoplay,EffectFade]}
                 spaceBetween={20}
                 slidesPerView={1}
                 navigation={{
-                    nextEl: ".custom-next",
-                    prevEl: ".custom-prev",
+                    nextEl: ".testimonial-next",
+                    prevEl: ".testimonial-prev",
                 }}
                 autoplay={{
                     delay: 0, // 3 seconds
@@ -103,9 +110,9 @@ const TestimonialSection = () => {
                 }}
                 loop={true}
                 pagination={{ el: ".custom-pagination", clickable: true }}
-                onSlideChange={(swiper) => setBgImage(testimonials[swiper.realIndex].img)}
-                className="pb-12 "
-               speed={4000}
+                onSlideChangeTransitionEnd={(swiper) => setBgImage(testimonials[swiper.realIndex].img)}
+                className="pb-12 testimonial-swiper"
+               speed={10000}
             >
                 {
                     isWide ? 
@@ -168,7 +175,7 @@ const TestimonialSection = () => {
             {/* Controls */}
             <div className="flex items-center justify-start gap-4 mx-auto w-[400px] p-2 mt-8 ">
                 {/* Prev Button */}
-                <button className="custom-prev w-30 h-16 rounded-full text-4xl font-bold bg-brand-carhead/40 text-brand-carhead hover:bg-brand-carhead hover:text-brand-cardhead flex items-center justify-center">
+                <button className="testimonial-prev w-30 h-16 rounded-full text-4xl font-bold bg-brand-carhead/40 text-brand-carhead hover:bg-brand-carhead hover:text-brand-cardhead flex items-center justify-center">
                     ←
                 </button>
 
@@ -176,7 +183,7 @@ const TestimonialSection = () => {
                 <div className="custom-pagination flex items-center justify-center gap-2 px-3 py-2 rounded-full bg-brand-carhead/40 w-4"></div>
 
                 {/* Next Button */}
-                <button className="custom-next w-30 h-16 text-4xl font-bold rounded-full bg-brand-carhead/40 text-brand-carhead hover:bg-brand-carhead hover:text-brand-cardhead flex items-center justify-center">
+                <button className="testimonial-next w-30 h-16 text-4xl font-bold rounded-full bg-brand-carhead/40 text-brand-carhead hover:bg-brand-carhead hover:text-brand-cardhead flex items-center justify-center">
                     →
                 </button>
 

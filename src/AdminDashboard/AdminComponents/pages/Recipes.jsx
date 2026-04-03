@@ -11,6 +11,7 @@ import DeleteConfirmModal from "../../../Utility/DeleteConfirmModal";
 import PublishConfirmModal from "../../../Utility/PublishConfirmModal";
 import UnpublishConfirmModal from "../../../Utility/UnpublishConfirmModal";
 import { useDashboard } from "../../Context/DashboardContext";
+import TableSkeleton from "../../../Utility/skeletons/TableSkeleton";
 
 const Recipes = () => {
   const [activeTab, setActiveTab] = useState("published");
@@ -240,7 +241,7 @@ const Recipes = () => {
           </Tabs.List>
 
           {isLoading ? (
-            <div className="mt-4 text-center text-brand-muted">Loading...</div>
+            <TableSkeleton/>
           ) : isError ? (
             <div className="mt-4 text-center text-red-500">
               Failed to load recipe.

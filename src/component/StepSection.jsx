@@ -20,14 +20,15 @@ const StepSection = () => {
 
         <div className="flex flex-col gap-16 lg:flex-row xl:gap-16 lg:gap-12 ">
             {/* Card1 */}
-            <div className="  lg:flex-1 bg-white shadow rounded-xl overflow-hidden flex flex-col h-[500px]">
+            <div className="group lg:flex-1 bg-white shadow rounded-xl overflow-hidden flex flex-col h-[500px]">
                 {/* Image */}
-                <div className="flex-[3] lg:flex-[3] min-h-0">
+                <div className="relative flex-[3] lg:flex-[3] min-h-0 overflow-hidden">
                     <img
                         src={Placeholder}
                         alt="Step 1"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:-translate-y-2 group-hover:rotate-[1.2deg] group-hover:brightness-105"
                     />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
                 </div>
                 {/* Text */}
                 <div className="flex-[1] lg:flex-[1] p-4 text-center">
@@ -39,13 +40,14 @@ const StepSection = () => {
             </div>
 
             {/* Card2 */}
-            <div className=" lg:flex-1 bg-white shadow rounded-xl overflow-hidden flex flex-col h-[500px]">
-                <div className="flex-[3] lg:flex-[3] min-h-0">
+            <div className="group lg:flex-1 bg-white shadow rounded-xl overflow-hidden flex flex-col h-[500px]">
+                <div className="relative flex-[3] lg:flex-[3] min-h-0 overflow-hidden">
                     <img
                         src={Placeholder}
                         alt="Step 2"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:translate-x-2 group-hover:rotate-[-1deg] group-hover:brightness-105"
                     />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
                 </div>
                 <div className="flex-[1] lg:flex-[1] p-4 text-center">
                     <h3 className="text-xl text-brand-cardhead font-heading font-semibold">Smart Meal Plans</h3>
@@ -56,13 +58,14 @@ const StepSection = () => {
             </div>
 
             {/* Card3 */}
-            <div className=" lg:flex-1 bg-white shadow rounded-xl overflow-hidden flex flex-col h-[500px]">
-                <div className="flex-[3] lg:flex-[3] min-h-0">
+            <div className="group lg:flex-1 bg-white shadow rounded-xl overflow-hidden flex flex-col h-[500px]">
+                <div className="relative flex-[3] lg:flex-[3] min-h-0 overflow-hidden">
                     <img
                         src={Placeholder}
                         alt="Step 3"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:translate-y-1 group-hover:rotate-[0.8deg] group-hover:brightness-110"
                     />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
                 </div>
                 <div className="flex-[1] lg:flex-[1] p-4 text-center">
                     <h3 className="text-xl text-brand-cardhead font-heading font-semibold">Auto Grocery Sync</h3>

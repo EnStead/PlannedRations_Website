@@ -27,7 +27,7 @@ export const ToastProvider = ({ children }) => {
         {toasts.map((toast) => (
           <Toast.Root
             key={toast.id}
-            className={`rounded-xl p-4 shadow-lg bg-white border ${
+            className={`rounded-xl p-4 shadow-lg z-50! bg-white border ${
               toast.variant === "error"
                 ? "border-red-500"
                 : toast.variant === "success"

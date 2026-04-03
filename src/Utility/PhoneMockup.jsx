@@ -5,7 +5,7 @@ const PhoneMockup = ({isScrolled}) => {
   return (
     <div className = {`flex justify-center items-center max-h-screen `}>
         <div 
-            className={` z-10 absolute transition-all duration-700 ease-in-out pb-20 
+            className={` z-10 absolute transition-all duration-700 ease-in-out pb-20 [perspective:1200px]
             ${ isScrolled ? "bottom-0 rotate-0" : " bottom-[-40px] xsm:bottom-[-100px] sm:bottom-[-150px] rotate-[-12deg]"}`} 
         >
             <Tilt
@@ -13,8 +13,8 @@ const PhoneMockup = ({isScrolled}) => {
                 glareMaxOpacity={0.3}
                 scale={1.05}
                 transitionSpeed={2500}
-                tiltMaxAngleX={20}
-                tiltMaxAngleY={20}
+                tiltMaxAngleX={12}
+                tiltMaxAngleY={12}
                 className="      
                     mx-auto 
                     w-[550px]      
@@ -24,7 +24,7 @@ const PhoneMockup = ({isScrolled}) => {
                 <img
                     src={Phone}
                     alt="Phone Mockup"
-                    className="w-full "
+                    className="w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)]"
                 />
             </Tilt>
 

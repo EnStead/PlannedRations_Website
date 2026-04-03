@@ -51,7 +51,7 @@ const FAQSection = () => {
                 {faqs.map((faq, index) => (
                     <div
                         key={index}
-                    
+                        className="transition-all duration-300 hover:-translate-y-2 hover:bg-white hover:shadow-lg p-6 rounded-2xl cursor-default border border-transparent hover:border-brand-planoff/20"
                     >
                     <h3 className=" font-heading text-brand-subtext font-semibold text-lg sm:text-xl mb-2">{faq.question}</h3>
                     <p className="text-brand-cartext font-normal text-base sm:text-lg leading-relaxed ">{faq.answer}</p>

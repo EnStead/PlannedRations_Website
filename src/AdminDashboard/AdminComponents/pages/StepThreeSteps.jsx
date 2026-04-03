@@ -25,6 +25,7 @@ const StepThreeInstructions = ({
         ],
   );
   const [publishModalOpen, setPublishModalOpen] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
 
   const onChangeRef = useRef(onChange);
   useEffect(() => {
@@ -91,7 +92,7 @@ const StepThreeInstructions = ({
   };
 
   /* -------------------- SUBMIT -------------------- */
-  const handleSubmit = (isDraft = false) => {
+  const handleSubmit = async (isDraft = false) => {
     const cleanedSteps = steps.map((s, index) => ({
       order: index + 1,
       title: s.title,
@@ -101,7 +102,7 @@ const StepThreeInstructions = ({
       tip: s.tip,
     }));
 
-    isDraft ? onSaveDraft(cleanedSteps) : onSubmit(cleanedSteps);
+    return isDraft ? onSaveDraft(cleanedSteps) : onSubmit(cleanedSteps);
   };
 
   return (
@@ -241,6 +242,7 @@ const StepThreeInstructions = ({
         <div className="flex flex-col sm:flex-row justify-between gap-4">
           <button
             onClick={() => setPublishModalOpen(true)}
+            disabled={isPublishing}
             className="px-18 py-3 rounded-full bg-brand-secondary text-white font-bold"
           >
             Publish
@@ -256,10 +258,20 @@ const StepThreeInstructions = ({
 
       <PublishConfirmModal
         open={publishModalOpen}
-        onClose={() => setPublishModalOpen(false)}
-        onConfirm={() => {
-          setPublishModalOpen(false);
-          handleSubmit(false);
+        loading={isPublishing}
+        onClose={() => {
+          if (!isPublishing) setPublishModalOpen(false);
+        }}
+        onConfirm={async () => {
+          try {
+            setIsPublishing(true);
+            const result = await handleSubmit(false);
+            if (result !== false) {
+              setPublishModalOpen(false);
+            }
+          } finally {
+            setIsPublishing(false);
+          }
         }}
         title="Ready to Publish this Recipe?"
         subtext="Publishing this recipe will make it visible to all users in the app. Please verify the ingredients, portions, and cooking steps before proceeding."

@@ -10,6 +10,7 @@ import PublishConfirmModal from "../../../Utility/PublishConfirmModal";
 import DeleteConfirmModal from "../../../Utility/DeleteConfirmModal";
 import UnpublishConfirmModal from "../../../Utility/UnpublishConfirmModal";
 import { useDashboard } from "../../Context/DashboardContext";
+import TableSkeleton from "../../../Utility/skeletons/TableSkeleton";
 
 const Posts = () => {
   const [activeTab, setActiveTab] = useState("published");
@@ -193,7 +194,7 @@ const Posts = () => {
           </Tabs.List>
 
           {isLoading ? (
-            <div className="mt-4 text-center text-brand-muted">Loading...</div>
+            <TableSkeleton/>
           ) : isError ? (
             <div className="mt-4 text-center text-red-500">
               Failed to load posts.

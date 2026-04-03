@@ -272,7 +272,7 @@ const CreatePosts = () => {
         description: "Post title is required",
         variant: "error",
       });
-      return;
+      return false;
     }
 
     isSubmittingRef.current = true;
@@ -311,6 +311,7 @@ const CreatePosts = () => {
       });
 
       navigate("/admin/posts");
+      return true;
     } catch (error) {
       isSubmittingRef.current = false;
       if (!isDraft) setIsPublishing(false);
@@ -321,6 +322,7 @@ const CreatePosts = () => {
         description: error.response?.data?.message || "Failed to save post",
         variant: "error",
       });
+      return false;
     } finally {
       if (!isDraft) setIsPublishing(false);
     }
@@ -635,7 +637,7 @@ const CreatePosts = () => {
               onClick={() => setTagsOpen(!tagsOpen)}
               className={`w-full flex items-center justify-between border ${selectedTags.length > 0 ? "border-brand-primary" : "border-brand-planoff"} bg-brand-carhead rounded-full mt-1 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-planoff`}
             >
-              <span className="truncate">
+              <span className="truncate pr-2">
                 {selectedTags.length > 0
                   ? availableTags
                       .filter((t) => selectedTags.includes(t.id))
@@ -647,16 +649,18 @@ const CreatePosts = () => {
             </button>
 
             {tagsOpen && (
-              <div className="absolute top-full left-0 w-full mt-1 bg-white border border-brand-planoff rounded-xl shadow-lg z-50 max-h-60 overflow-y-auto p-2">
+              <div className="absolute top-full left-0 mt-1 min-w-full w-max max-w-[26rem] bg-white border border-brand-planoff rounded-xl shadow-lg z-50 max-h-50 overflow-y-auto p-2">
                 {availableTags.map((tag) => (
                   <div
                     key={tag.id}
                     onClick={() => toggleTag(tag.id)}
-                    className="flex items-center justify-between px-4 py-2 hover:bg-brand-secondary/10 rounded-lg cursor-pointer transition"
+                    className="flex items-start justify-between gap-2 px-4 py-2 hover:bg-brand-secondary/10 rounded-lg cursor-pointer transition"
                   >
-                    <span className="text-brand-subtext">{tag.title}</span>
+                    <span className="text-brand-subtext whitespace-normal break-words leading-snug flex-1">
+                      {tag.title}
+                    </span>
                     {selectedTags.includes(tag.id) && (
-                      <Check size={16} className="text-brand-secondary" />
+                      <Check size={16} className="text-brand-secondary mt-0.5 shrink-0" />
                     )}
                   </div>
                 ))}
@@ -701,13 +705,15 @@ const CreatePosts = () => {
 
       <PublishConfirmModal
         open={publishModalOpen}
-        onClose={() => setPublishModalOpen(false)}
+        onClose={() => {
+          if (!isPublishing) setPublishModalOpen(false);
+        }}
         onConfirm={async () => {
-            // Keep modal open while loading if desired, or close it immediately.
-            // Usually for async actions inside modals, we keep it open to show loading state on the modal button.
-            await handleSubmit(false);
+          const result = await handleSubmit(false);
+          if (result !== false) {
             setPublishModalOpen(false);
-          }}
+          }
+        }}
         loading={isPublishing}
         title="Ready to Publish this Post?"
         subtext="Publishing this post will make it visible to all users on the platform."

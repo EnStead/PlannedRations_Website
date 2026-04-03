@@ -19,7 +19,7 @@ const CustomSelect = ({ label, options, value, onChange, classNameLabel, classNa
         </Select.Trigger>
 
         <Select.Portal>
-          <Select.Content className="bg-white rounded-xl shadow-lg z-50">
+          <Select.Content className="bg-white rounded-xl shadow-lg z-[100]">
             <Select.Viewport className="p-2">
               {options.map((option) => (
                 <Select.Item

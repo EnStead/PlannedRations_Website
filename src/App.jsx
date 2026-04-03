@@ -19,6 +19,7 @@ import Layout from "./container/Layout";
 import ContactPage from "./container/ContactPage";
 import Privacy from "./container/Privacy";
 import Terms from "./container/Terms";
+import FamilyInviteGateway from "./container/FamilyInviteGateway";
 import ScrollToTop from "./Utility/ScrollToTop";
 import { AuthProvider } from "./AdminDashboard/Context/AuthContext";
 import { ToastProvider } from "./AdminDashboard/Context/ToastProvider";
@@ -51,7 +52,7 @@ function AppContent() {
                 LeftCard="#76B1FF"
                 Cursors={Cursor}
                 Tooltip="#F9A720"
-                showFooter={false}
+                showFooter={true}
               >
                 <LandingPage
                   isScrolled={isScrolled}
@@ -82,7 +83,7 @@ function AppContent() {
                 LeftCard="#F9A720"
                 Cursors={BlogCursor}
                 Tooltip="#9E78F6"
-                showFooter={false}
+                showFooter={true}
               >
                 <Blog />
               </Layout>
@@ -99,7 +100,7 @@ function AppContent() {
                 Cursors={BlogCursor}
                 Tooltip="#9E78F6"
                 forceFixed={true}
-                showFooter={false}
+                showFooter={true}
               >
                 <BlogPostSection />
               </Layout>
@@ -145,13 +146,17 @@ function AppContent() {
                 LeftCard="#F9A720"
                 Cursors={BlogCursor}
                 Tooltip="#9E78F6"
-                showFooter={false}
+                showFooter={true}
               >
                 <ContactPage />
               </Layout>
             </div>
           }
         />
+        <Route path="/invite/:token" element={<FamilyInviteGateway />} />
+        <Route path="/family-invite/:token" element={<FamilyInviteGateway />} />
+        <Route path="/invite" element={<FamilyInviteGateway />} />
+        <Route path="/family-invite" element={<FamilyInviteGateway />} />
       </Routes>
     </ToastProvider>
   );

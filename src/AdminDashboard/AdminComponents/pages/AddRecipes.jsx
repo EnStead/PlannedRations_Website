@@ -23,8 +23,8 @@ const AddRecipes = () => {
     name: "",
     description: "",
     tags: [],
-    cuisine: [],
-    diet_type: "",
+    cuisine: "",
+    diet_type: [],
     base_servings: "",
     calories: "",
     cooking_time: "",
@@ -60,12 +60,14 @@ const AddRecipes = () => {
             name: data.name || "",
             description: data.description || "",
             tags: data.tags ? data.tags.map((t) => t.id) : [],
-            cuisine: data.cuisine
-              ? Array.isArray(data.cuisine)
-                ? data.cuisine
-                : [data.cuisine]
-              : [],
-            diet_type: data.diet_type || "",
+            cuisine: Array.isArray(data.cuisine)
+              ? data.cuisine[0] || ""
+              : data.cuisine || "",
+            diet_type: Array.isArray(data.diet_type)
+              ? data.diet_type
+              : data.diet_type
+                ? [data.diet_type]
+                : [],
             base_servings: data.base_servings ? String(data.base_servings) : "",
             calories: data.calories ? String(data.calories) : "",
             cooking_time: data.cooking_time ? String(data.cooking_time) : "",
@@ -121,8 +123,8 @@ const AddRecipes = () => {
         name: "",
         description: "",
         tags: [],
-        cuisine: [],
-        diet_type: "",
+        cuisine: "",
+        diet_type: [],
         base_servings: "",
         calories: "",
         cooking_time: "",
@@ -143,8 +145,8 @@ const AddRecipes = () => {
       recipeData.name ||
       recipeData.description ||
       recipeData.tags.length > 0 ||
-      recipeData.cuisine.length > 0 ||
-      recipeData.diet_type ||
+      !!recipeData.cuisine ||
+      recipeData.diet_type.length > 0 ||
       recipeData.base_servings ||
       recipeData.calories ||
       recipeData.cooking_time ||
@@ -195,6 +197,12 @@ const AddRecipes = () => {
 
   const buildPayload = (isDraft = false, data = recipeData) => ({
     ...data,
+    cuisine: Array.isArray(data.cuisine) ? data.cuisine[0] || "" : data.cuisine,
+    diet_type: Array.isArray(data.diet_type)
+      ? data.diet_type
+      : data.diet_type
+        ? [data.diet_type]
+        : [],
     base_servings: Number(data.base_servings),
     calories: Number(data.calories),
     cooking_time: Number(data.cooking_time),
@@ -249,7 +257,7 @@ const AddRecipes = () => {
       formData.append("calories", payload.calories);
       formData.append("cooking_time", payload.cooking_time);
       formData.append("difficulty", payload.difficulty);
-      formData.append("diet_type", payload.diet_type);
+      formData.append("cuisine", payload.cuisine || "");
       formData.append("is_draft", payload.is_draft ? "1" : "0");
 
       // Append Arrays using bracket notation for FormData
@@ -257,8 +265,8 @@ const AddRecipes = () => {
         payload.tags.forEach((tag) => formData.append("tags[]", tag));
       }
 
-      if (Array.isArray(payload.cuisine)) {
-        payload.cuisine.forEach((c) => formData.append("cuisine[]", c));
+      if (Array.isArray(payload.diet_type)) {
+        payload.diet_type.forEach((d) => formData.append("diet_type[]", d));
       }
 
       // Helper to append array of objects
@@ -297,6 +305,7 @@ const AddRecipes = () => {
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
 
       navigate("/admin/recipes");
+      return true;
     } catch (error) {
       isSubmittingRef.current = false;
       console.error("Recipe submit failed", error);
@@ -306,6 +315,7 @@ const AddRecipes = () => {
         description: error.response?.data?.message || "Failed to submit recipe",
         variant: "error",
       });
+      return false;
     }
   };
 
@@ -400,7 +410,7 @@ const AddRecipes = () => {
               }}
               onSubmit={(steps) => {
                 setRecipeData((prev) => ({ ...prev, steps }));
-                submitRecipe(false, { ...recipeData, steps });
+                return submitRecipe(false, { ...recipeData, steps });
               }}
               onSaveDraft={() => submitRecipe(true)}
             />
