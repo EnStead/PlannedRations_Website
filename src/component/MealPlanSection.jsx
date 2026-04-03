@@ -241,7 +241,7 @@ const MealPlanSection = () => {
   return (
     <div id='plans' ref={sectionRef} className='pt-37 pb-5 relative bg-brand-carhead'>
         {/* HIDEN SECTION*/}
-        <div className='bg-brand-carhead px-7 xsm:px-15 mb-7 pb-16  ' >
+        {/* <div className='bg-brand-carhead px-7 xsm:px-15 mb-7 pb-16  ' >
             <div
                 className={
                     `absolute top-0 left-0 w-full 
@@ -264,10 +264,10 @@ const MealPlanSection = () => {
                 </div> 
         
                 <div className="flex flex-col ml:flex-row justify-center text-center gap-16 ml:gap-6 lg:gap-10 xl:gap-16 ">
-                    {/* Card1 */}
+                    Card1
                     <div className="group relative ml:flex-1 bg-brand-orange shadow rounded-xl overflow-hidden flex flex-col h-[500px] ssm:h-[600px] text-center justify-end"
                     >
-                        {/* Doodle Icons - Insert your icons here */}
+                        Doodle Icons - Insert your icons here
                         <div className="absolute inset-0 pointer-events-none z-20">
                           {doodleCloud.map((item, index) => (
                             <img
@@ -298,7 +298,7 @@ const MealPlanSection = () => {
                         </div>
                     </div>
         
-                    {/* Card2 */}
+                    Card2
                     <div className=" ml:flex-1 bg-transparent rounded-xl overflow-hidden flex flex-col h-[500px] ssm:h-[600px] text-center justify-start relative"
                         style={{
                             backgroundImage: `url(${You})`,
@@ -320,7 +320,7 @@ const MealPlanSection = () => {
                         </div>
                     </div>
         
-                    {/* Card3 */}
+                    Card3
                     <div className="group relative ml:flex-1 bg-brand-purple shadow rounded-xl overflow-hidden flex flex-col h-[500px] ssm:h-[600px] text-center justify-end"
                     >
                         <div
@@ -360,13 +360,13 @@ const MealPlanSection = () => {
         
             </div>            
 
-        </div>
+        </div> */}
 
         {/* HIDEN SECTION*/}
         {/* Plan Carousel */}
-        <div className='mt-10'>
+        {/* <div className='mt-10'>
             <PlanCarousel/>  
-        </div>
+        </div> */}
 
         {/* Meal Plan Deets */}
         <MealPlanDeets/>

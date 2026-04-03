@@ -7,10 +7,10 @@ const ContactPage = () => {
   return (
     <div>
         <ContactHeroPage/>
-        <FAQSection/>
+        {/* <FAQSection/>
         <div className='bg-brand-carhead'>
           <StoreSection/>
-        </div>
+        </div> */}
     </div>
   )
 }

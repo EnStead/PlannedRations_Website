@@ -13,23 +13,23 @@ import HeroPageMisc from '../Utility/HeroPageMisc'
 const LandingPage = ({isScrolled, setIsScrolled }) => {
   return (
     <div>
-        {/* <HeroPageMisc/> */}
+        <HeroPageMisc/>
         
         {/* HIDEN SECTION*/}
 
 
-        <HeroPage isScrolled={isScrolled} setIsScrolled={setIsScrolled} />
-        <StepSection />
-        <CarouselSection />
+        {/* <HeroPage isScrolled={isScrolled} setIsScrolled={setIsScrolled} /> */}
+        {/* <StepSection />
+        <CarouselSection /> */}
         <MealPlanSection/>
-        <TestimonialSection/>
-        <div className='bg-brand-carhead'>
+        {/* <TestimonialSection/> */}
+        {/* <div className='bg-brand-carhead'>
           <PricingSection  />
-        </div>
-        <FAQSection  />
-        <div className='bg-brand-carhead'>
+        </div> */}
+        {/* <FAQSection  /> */}
+        {/* <div className='bg-brand-carhead'>
           <StoreSection/>
-        </div>
+        </div> */}
 
     </div>
   )
