@@ -2,6 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { X, CloudUpload } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import CustomSelect from "./CustomSelect";
+import api from "./api";
 
 const UNITS = [
   "gram (g)",
@@ -10,23 +11,6 @@ const UNITS = [
   "teaspoon (tsp)",
   "pieces (pcs)",
   "cups (cps)",
-];
-
-const CATEGORIES = [
-  "Vegetables",
-  "Fruits",
-  "Meat & Poultry",
-  "Seafood",
-  "Dairy & Eggs",
-  "Grains & Pasta",
-  "Legumes",
-  "Spices & Herbs",
-  "Oils & Fats",
-  "Nuts & Seeds",
-  "Baking",
-  "Condiments",
-  "Beverages",
-  "Other",
 ];
 
 const IngredientModal = ({
@@ -45,6 +29,7 @@ const IngredientModal = ({
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [categories, setCategories] = useState([]);
   const fileRef = useRef(null);
 
   useEffect(() => {
@@ -77,6 +62,22 @@ const IngredientModal = ({
     }
   }, [imageFile]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get("/admin/ingredients/categories/list");
+        setCategories(Array.isArray(res.data?.data) ? res.data.data : []);
+      } catch (error) {
+        console.error("Failed to fetch ingredient categories", error);
+        setCategories([]);
+      }
+    };
+
+    fetchCategories();
+  }, [open]);
+
   const onDropOrSelectFile = (file) => {
     if (!file) return;
     if (!file.type.startsWith("image/")) {
@@ -106,6 +107,19 @@ const IngredientModal = ({
     e.preventDefault();
     onSubmit({ ...form, image: imageFile });
   };
+
+  const formatCategoryOption = (value) =>
+    value
+      .split("/")
+      .map((segment) =>
+        segment
+          .split(" ")
+          .map((word) =>
+            word ? word.charAt(0).toUpperCase() + word.slice(1) : word
+          )
+          .join(" ")
+      )
+      .join("/");
 
   return (
     <Dialog.Root open={open} onOpenChange={onClose}>
@@ -191,11 +205,12 @@ const IngredientModal = ({
             <div className="flex flex-col sm:flex-row gap-3">
               <CustomSelect
                 label="Category"
-                options={CATEGORIES}
+                options={categories}
                 value={form.category}
                 onChange={(val) =>
                   setForm((prev) => ({ ...prev, category: val }))
                 }
+                formatOption={formatCategoryOption}
                 classNameLabel={
                   form.category ? "text-brand-primary" : "text-brand-muted"
                 }
