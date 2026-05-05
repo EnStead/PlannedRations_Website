@@ -34,11 +34,13 @@ const IngredientModal = ({
 
   useEffect(() => {
     if (mode === "edit" && initialValues) {
+      const rawUnit = initialValues.default_unit || initialValues.defaultUnit || "";
+      const matchedUnit = rawUnit ? (UNITS.find(u => u === rawUnit || u.includes(`(${rawUnit})`)) || rawUnit) : "";
+
       setForm({
         name: initialValues.name || "",
         category: initialValues.category || "",
-        default_unit:
-          initialValues.default_unit || initialValues.defaultUnit || "",
+        default_unit: matchedUnit,
         description: initialValues.description || "",
       });
       setImagePreview(initialValues.image_url || null);
@@ -78,6 +80,20 @@ const IngredientModal = ({
     fetchCategories();
   }, [open]);
 
+  useEffect(() => {
+    if (mode === "edit" && initialValues?.category && categories.length > 0) {
+      const matched = categories.find(
+        (c) => c.name === initialValues.category || c.slug === initialValues.category
+      );
+      if (matched) {
+        setForm((prev) => {
+          if (prev.category === matched.slug) return prev;
+          return { ...prev, category: matched.slug };
+        });
+      }
+    }
+  }, [categories, mode, initialValues]);
+
   const onDropOrSelectFile = (file) => {
     if (!file) return;
     if (!file.type.startsWith("image/")) {
@@ -108,8 +124,9 @@ const IngredientModal = ({
     onSubmit({ ...form, image: imageFile });
   };
 
-  const formatCategoryOption = (value) =>
-    value
+  const formatCategoryOption = (value) => {
+    if (!value) return "";
+    return String(value)
       .split("/")
       .map((segment) =>
         segment
@@ -120,6 +137,7 @@ const IngredientModal = ({
           .join(" ")
       )
       .join("/");
+  };
 
   return (
     <Dialog.Root open={open} onOpenChange={onClose}>

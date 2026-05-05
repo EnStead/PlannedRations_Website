@@ -2,15 +2,45 @@ import * as Select from "@radix-ui/react-select";
 import { ChevronDown, Check } from "lucide-react";
 
 const CustomSelect = ({ label, options, value, onChange, classNameLabel, classNameSelect, formatOption }) => {
+  const getOptValue = (opt) => {
+    if (typeof opt === "object" && opt !== null) {
+      const val = opt.slug ?? opt.id ?? opt.name;
+      return val !== undefined && val !== null ? String(val) : String(opt);
+    }
+    return String(opt);
+  };
+
+  const getOptLabel = (opt) => {
+    if (typeof opt === "object" && opt !== null) {
+      const val = opt.name ?? opt.title ?? opt.label ?? opt.slug;
+      return val !== undefined && val !== null ? String(val) : String(opt);
+    }
+    return String(opt);
+  };
+
+  const getOptDesc = (opt) => {
+    if (typeof opt === "object" && opt !== null) {
+      return opt.description ?? opt.subtext ?? null;
+    }
+    return null;
+  };
+
+  const selectedLabel = () => {
+    if (value === undefined || value === null || value === "") return undefined;
+    const selectedOpt = options.find((opt) => getOptValue(opt) === String(value));
+    const labelStr = selectedOpt !== undefined ? getOptLabel(selectedOpt) : String(value);
+    return formatOption ? formatOption(labelStr) : labelStr;
+  };
+
   return (
     <div className="w-full">
       <label className={`mb-1 font-medium ${classNameLabel} block`}>{label}</label>
 
-      <Select.Root value={value} onValueChange={onChange}>
+      <Select.Root value={value !== undefined && value !== null ? String(value) : ""} onValueChange={onChange}>
         <Select.Trigger className={`w-full flex ${classNameSelect} bg-brand-carhead justify-between items-center border rounded-full px-4 py-3 ${!value ? "text-brand-cartext" : ""}`}>
           <span className="truncate flex-1 text-left">
             <Select.Value placeholder="Select from the options...">
-              {value && formatOption ? formatOption(value) : undefined}
+              {selectedLabel() || "Select from the options..."}
             </Select.Value>
           </span>
           <Select.Icon className="flex-shrink-0 ml-2">
@@ -21,18 +51,29 @@ const CustomSelect = ({ label, options, value, onChange, classNameLabel, classNa
         <Select.Portal>
           <Select.Content className="bg-white rounded-xl shadow-lg z-[100]">
             <Select.Viewport className="p-2">
-              {options.map((option) => (
-                <Select.Item
-                  key={option}
-                  value={option}
-                  className="px-4 py-2 rounded-md cursor-pointer hover:bg-brand-secondary/30 outline-0 hover:text-white flex justify-between"
-                >
-                  <Select.ItemText>{formatOption ? formatOption(option) : option}</Select.ItemText>
-                  <Select.ItemIndicator>
-                    <Check size={14} />
-                  </Select.ItemIndicator>
-                </Select.Item>
-              ))}
+              {options.map((option, idx) => {
+                const optVal = getOptValue(option);
+                const optLabel = getOptLabel(option);
+                const optDesc = getOptDesc(option);
+
+                return (
+                  <Select.Item
+                    key={optVal || idx}
+                    value={optVal}
+                    className="px-4 py-2 rounded-md cursor-pointer hover:bg-brand-secondary/30 outline-0 hover:text-white flex justify-between items-center"
+                  >
+                    <div className="flex flex-col text-left">
+                      <Select.ItemText>{formatOption ? formatOption(optLabel) : optLabel}</Select.ItemText>
+                      {optDesc && (
+                        <span className="text-xs opacity-70 font-light mt-0.5">{optDesc}</span>
+                      )}
+                    </div>
+                    <Select.ItemIndicator>
+                      <Check size={14} />
+                    </Select.ItemIndicator>
+                  </Select.Item>
+                );
+              })}
             </Select.Viewport>
           </Select.Content>
         </Select.Portal>
