@@ -49,7 +49,11 @@ const CustomSelect = ({ label, options, value, onChange, classNameLabel, classNa
         </Select.Trigger>
 
         <Select.Portal>
-          <Select.Content className="bg-white rounded-xl shadow-lg z-[100]">
+          <Select.Content 
+            position="popper" 
+            sideOffset={4} 
+            className="bg-white rounded-xl shadow-lg z-[100] max-h-60 overflow-y-auto w-[var(--radix-select-trigger-width)]"
+          >
             <Select.Viewport className="p-2">
               {options.map((option, idx) => {
                 const optVal = getOptValue(option);
