@@ -11,7 +11,27 @@ const UNITS = [
   "teaspoon (tsp)",
   "pieces (pcs)",
   "cups (cps)",
+  "pounds (lbs)",
+  "ounces (oz)",
 ];
+
+const FRACTIONS = ["-", "½", "¼", "⅛", "⅓", "⅔", "¾", "⅜", "⅝", "⅞"];
+
+const FRACTION_MAP = {
+  "½": "(1/2)",
+  "¼": "(1/4)",
+  "⅛": "(1/8)",
+  "⅓": "(1/3)",
+  "⅔": "(2/3)",
+  "¾": "(3/4)",
+  "⅜": "(3/8)",
+  "⅝": "(5/8)",
+  "⅞": "(7/8)",
+};
+
+const REVERSE_FRACTION_MAP = Object.fromEntries(
+  Object.entries(FRACTION_MAP).map(([k, v]) => [v, k])
+);
 
 const StepTwoIngredients = ({
   onNext,
@@ -21,11 +41,29 @@ const StepTwoIngredients = ({
 }) => {
   const { showToast } = useToast();
   const [availableIngredients, setAvailableIngredients] = useState([]);
-  const [ingredients, setIngredients] = useState(
-    initialIngredients?.length > 0
-      ? initialIngredients
-      : [{ id: Date.now(), name: "", quantity: "", unit: "" }],
-  );
+  const [ingredients, setIngredients] = useState(() => {
+    if (initialIngredients?.length > 0) {
+      return initialIngredients.map((ing) => {
+        let base_quantity = String(ing.quantity || "");
+        let fraction = "-";
+
+        // Try extracting any appended fraction back into the select value
+        for (const [fracStr, char] of Object.entries(REVERSE_FRACTION_MAP)) {
+          if (base_quantity.endsWith(fracStr)) {
+            fraction = char;
+            base_quantity = base_quantity.slice(0, -fracStr.length).trim();
+            break;
+          } else if (base_quantity.endsWith(char)) {
+            fraction = char;
+            base_quantity = base_quantity.slice(0, -char.length).trim();
+            break;
+          }
+        }
+        return { ...ing, base_quantity, fraction };
+      });
+    }
+    return [{ id: Date.now(), name: "", base_quantity: "", fraction: "-", unit: "" }];
+  });
   const [draggedIndex, setDraggedIndex] = useState(null);
 
   const onChangeRef = useRef(onChange);
@@ -33,8 +71,22 @@ const StepTwoIngredients = ({
     onChangeRef.current = onChange;
   }, [onChange]);
 
+  const getComputedIngredients = (ings) => {
+    return ings.map((ing) => {
+      const q = ing.base_quantity?.trim() || "";
+      const f = ing.fraction && ing.fraction !== "-" ? ing.fraction : "";
+
+      let computedQuantity = q;
+      if (f) {
+        const fracStr = FRACTION_MAP[f] || f;
+        computedQuantity = q ? `${q}${fracStr}` : fracStr;
+      }
+      return { ...ing, quantity: computedQuantity };
+    });
+  };
+
   useEffect(() => {
-    onChangeRef.current?.(ingredients);
+    onChangeRef.current?.(getComputedIngredients(ingredients));
   }, [ingredients]);
 
   useEffect(() => {
@@ -52,7 +104,7 @@ const StepTwoIngredients = ({
   const addIngredient = () => {
     setIngredients([
       ...ingredients,
-      { id: Date.now(), name: "", quantity: "", unit: "" },
+      { id: Date.now(), name: "", base_quantity: "", fraction: "-", unit: "" },
     ]);
   };
 
@@ -61,7 +113,7 @@ const StepTwoIngredients = ({
       setIngredients(ingredients.filter((_, i) => i !== index));
     } else {
       // Reset the last one if it's the only one
-      setIngredients([{ id: Date.now(), name: "", quantity: "", unit: "" }]);
+      setIngredients([{ id: Date.now(), name: "", base_quantity: "", fraction: "-", unit: "" }]);
     }
   };
 
@@ -81,7 +133,8 @@ const StepTwoIngredients = ({
   };
 
   const handleNext = () => {
-    const validIngredients = ingredients.filter(
+    const computed = getComputedIngredients(ingredients);
+    const validIngredients = computed.filter(
       (i) => i.name.trim() && i.quantity,
     );
 
@@ -167,27 +220,44 @@ const StepTwoIngredients = ({
 
             <div className="w-full sm:w-auto">
               <label className={`mb-1 block font-medium transition ${
-                ingredient.quantity ? "text-brand-primary" : "text-brand-cartext"
+                ingredient.base_quantity ? "text-brand-primary" : "text-brand-cartext"
               }`}>
                 Value
               </label>
               <input
                 type="text"
                 placeholder="Enter value"
-                value={ingredient.quantity}
+                value={ingredient.base_quantity}
                 onChange={(e) => {
                   const val = e.target.value;
                   if (/^\d*\.?\d*$/.test(val))
-                    updateIngredient(index, "quantity", val);
+                    updateIngredient(index, "base_quantity", val);
                 }}
                 className={`w-full border ${
-                  ingredient.quantity?.trim()
+                  ingredient.base_quantity?.trim()
                     ? "border-brand-primary"
                     : "border-brand-planoff"
                 } bg-brand-carhead rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-planoff`}
               />
             </div>
 
+            <div className="w-full sm:w-27">
+              <CustomSelect
+                label="Fraction"
+                options={FRACTIONS}
+                value={ingredient.fraction}
+                onChange={(val) => updateIngredient(index, "fraction", val)}
+                classNameLabel={
+                  ingredient.fraction && ingredient.fraction !== "-" ? "text-brand-primary" : "text-brand-cartext"
+                }
+                classNameSelect={
+                  ingredient.fraction && ingredient.fraction !== "-"
+                    ? "border-brand-primary"
+                    : "border-brand-planoff"
+                }
+              />
+            </div>
+            
             <div className="w-full sm:w-42">
               <CustomSelect
                 label="Unit"

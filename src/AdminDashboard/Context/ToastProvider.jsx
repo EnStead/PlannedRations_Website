@@ -27,7 +27,7 @@ export const ToastProvider = ({ children }) => {
         {toasts.map((toast) => (
           <Toast.Root
             key={toast.id}
-            className={`rounded-xl p-4 shadow-lg z-50! bg-white border ${
+            className={`rounded-xl p-4 shadow-lg bg-white border ${
               toast.variant === "error"
                 ? "border-red-500"
                 : toast.variant === "success"
@@ -46,7 +46,7 @@ export const ToastProvider = ({ children }) => {
           </Toast.Root>
         ))}
 
-        <Toast.Viewport className="fixed top-5 right-5 z-[9999] flex flex-col gap-3 w-[360px]" />
+        <Toast.Viewport className="fixed top-5 right-5 z-[999999] flex flex-col gap-3 w-[360px]" />
       </Toast.Provider>
     </ToastContext.Provider>
   );

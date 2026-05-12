@@ -47,9 +47,9 @@ const StepOneBasics = ({ onNext, onSaveDraft, onChange, initialData, initialImag
   const dietRef = useRef(null);
 
   const initialFixedNutrients = [
-    { id: "protein", label: "Protein", value: "", unit: "g" },
-    { id: "carbs", label: "Carbohydrates", value: "", unit: "g" },
-    { id: "fats", label: "Fats", value: "", unit: "g" },
+    { id: "protein", label: "Protein", value: "", unit: "kcal" },
+    { id: "carbs", label: "Carbohydrates", value: "", unit: "kcal" },
+    { id: "fats", label: "Fats", value: "", unit: "kcal" },
   ];
   const [fixedNutrients, setFixedNutrients] = useState(() => {
     if (initialData?.nutrition?.length > 0) {
@@ -73,7 +73,7 @@ const StepOneBasics = ({ onNext, onSaveDraft, onChange, initialData, initialImag
           id: Date.now().toString() + i,
           label: n.label,
           value: n.value,
-          unit: n.unit,
+          unit: n.unit || "kcal",
         }));
     }
     return [];
@@ -208,7 +208,7 @@ useEffect(() => {
   const addExtraNutrient = () => {
     setExtraNutrients((prev) => [
       ...prev,
-      { id: Date.now().toString(), label: "", value: "", unit: "g" },
+      { id: Date.now().toString(), label: "", value: "", unit: "kcal" },
     ]);
   };
 
@@ -683,19 +683,7 @@ useEffect(() => {
                     } bg-brand-carhead rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-planoff`}
                   />
                   <div className="absolute right-4 top-[44%] -translate-y-1/2 text-brand-subtext font-medium">
-                    <select
-                      value={n.unit}
-                      onChange={(e) =>
-                        updateFixedNutrient(n.id, { unit: e.target.value })
-                      }
-                      className="bg-transparent"
-                    >
-                      {units.map((u) => (
-                        <option key={u} value={u}>
-                          {u}
-                        </option>
-                      ))}
-                    </select>
+                    kcal
                   </div>
                 </div>
               </div>
@@ -748,19 +736,7 @@ useEffect(() => {
                       } bg-brand-carhead rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-planoff`}
                     />
                     <div className="absolute right-4 top-[44%] -translate-y-1/2 text-brand-subtext font-medium">
-                      <select
-                        value={n.unit}
-                        onChange={(e) =>
-                          updateExtraNutrient(n.id, { unit: e.target.value })
-                        }
-                        className="bg-transparent"
-                      >
-                        {units.map((u) => (
-                          <option key={u} value={u}>
-                            {u}
-                          </option>
-                        ))}
-                      </select>
+                      kcal
                     </div>
                   </div>
 

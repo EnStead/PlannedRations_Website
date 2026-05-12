@@ -54,6 +54,8 @@ const AddRecipes = () => {
             tsp: "teaspoon (tsp)",
             pcs: "pieces (pcs)",
             cps: "cups (cps)",
+            lbs: "pounds (lbs)",
+            oz: "ounces (oz)",
           };
 
           setRecipeData({
@@ -86,7 +88,7 @@ const AddRecipes = () => {
               ? data.ingredients.map((i) => ({
                   id: Date.now() + Math.random(),
                   name: i.name || i.ingredient?.name || "",
-                  quantity: String(i.quantity),
+                  quantity: i.quantity != null ? String(i.quantity) : "",
                   unit: unitMapping[i.unit] || i.unit,
                   ingredient_id: i.ingredient_id,
                 }))
@@ -222,7 +224,7 @@ const AddRecipes = () => {
         const cleanUnit = unitMatch ? unitMatch[1] : i.unit;
         return {
           ingredient_id: i.ingredient_id,
-          quantity: Number(i.quantity),
+          quantity: i.quantity,
           unit: cleanUnit,
         };
       }),
