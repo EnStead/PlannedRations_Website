@@ -210,13 +210,13 @@ const AddRecipes = () => {
     cooking_time: Number(data.cooking_time),
     difficulty: data.difficulty?.toLowerCase() || "", // lowercase
     is_draft: isDraft,
-    tags: data.tags.map((t) => t.id || t), // make sure it's the **ID**, not title
-    nutrition: data.nutrition.map((n) => ({
+    tags: (data.tags || []).map((t) => t.id || t), // make sure it's the **ID**, not title
+    nutrition: (data.nutrition || []).map((n) => ({
       name: n.label, // rename label -> name
       value: Number(n.value), // convert string to number
       unit: n.unit,
     })),
-    ingredients: data.ingredients
+    ingredients: (data.ingredients || [])
       .filter((i) => i.ingredient_id) // Only include ingredients with valid IDs
       .map((i) => {
         // Extract unit abbreviation from "gram (g)" -> "g"
@@ -228,7 +228,7 @@ const AddRecipes = () => {
           unit: cleanUnit,
         };
       }),
-    steps: data.steps.map((s) => ({
+    steps: (data.steps || []).map((s) => ({
       title: s.title,
       instruction: s.instruction,
       time: s.cooking_time ? parseInt(s.cooking_time, 10) : (s.time ? parseInt(s.time, 10) : 0),
@@ -244,7 +244,7 @@ const AddRecipes = () => {
   ) => {
     isSubmittingRef.current = true;
     try {
-      const dataToUse = dataOverride || recipeData;
+      const dataToUse = dataOverride ? { ...recipeData, ...dataOverride } : recipeData;
       const payload = buildPayload(isDraft, dataToUse);
 
       const formData = new FormData();

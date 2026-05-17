@@ -98,7 +98,7 @@ const ReusableTable = ({
                     <div
                       ref={menuRef}
                       className={`absolute right-0 w-50 bg-white rounded-lg shadow-lg p-2 z-[120] ${
-                        index >= data.length - 3 ? "bottom-full mb-2" : "top-full mt-2"
+                        index >= 3 && index >= data.length - 3 ? "bottom-full mb-2" : "top-full mt-2"
                       }`}
                     >
                       {menuItems?.map((item, idx) => (
