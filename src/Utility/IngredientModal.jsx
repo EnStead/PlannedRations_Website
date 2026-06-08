@@ -13,6 +13,15 @@ const UNITS = [
   "cups (cps)",
 ];
 
+const ACCEPTED_IMAGE_TYPES = [
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+  "image/svg+xml",
+];
+
+const ACCEPTED_IMAGE_EXTENSIONS = [".png", ".jpg", ".jpeg", ".svg"];
+
 const IngredientModal = ({
   open,
   mode,
@@ -96,8 +105,15 @@ const IngredientModal = ({
 
   const onDropOrSelectFile = (file) => {
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      alert("Please upload an image file (PNG/JPG).");
+    const fileExtension = file.name
+      ? `.${file.name.split(".").pop()?.toLowerCase()}`
+      : "";
+    const isAcceptedImage =
+      ACCEPTED_IMAGE_TYPES.includes(file.type) ||
+      ACCEPTED_IMAGE_EXTENSIONS.includes(fileExtension);
+
+    if (!isAcceptedImage) {
+      alert("Please upload an image file (PNG, JPG, or SVG).");
       return;
     }
     setImageFile(file);
@@ -193,7 +209,7 @@ const IngredientModal = ({
                 <input
                   ref={fileRef}
                   type="file"
-                  accept="image/*"
+                  accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml"
                   onChange={handleFileInputChange}
                   className="hidden"
                 />
