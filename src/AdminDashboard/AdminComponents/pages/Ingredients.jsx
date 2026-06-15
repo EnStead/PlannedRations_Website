@@ -1,30 +1,57 @@
 import { useState } from "react";
+import * as Tabs from "@radix-ui/react-tabs";
 import Search from "../../../assets/Search.svg";
+import AllergyModal from "../../../Utility/AllergyModal";
 import IngredientModal from "../../../Utility/IngredientModal";
 import ReusableTable from "../../../Utility/ReusableTable";
 import { useIngredients } from "../hooks/useIngredients";
+import { useAllergies } from "../hooks/useAllergies";
 import TableSkeleton from "../../../Utility/skeletons/TableSkeleton";
 import PaginationFooter from "./PaginationFooter";
 import api from "../../../Utility/api";
 import { useDashboard } from "../../Context/DashboardContext";
 import DeleteConfirmModal from "../../../Utility/DeleteConfirmModal";
+import { useToast } from "../../Context/ToastProvider";
 
 const Ingredients = () => {
+  const [activeTab, setActiveTab] = useState("ingredients");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
   const [selectedItem, setSelectedItem] = useState(null);
   const { page, setPage, search, setSearch } = useDashboard();
+  const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [ingredientToDelete, setIngredientToDelete] = useState(null);
+  const [itemToDelete, setItemToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { data, isLoading, isError, refetch } = useIngredients({
+  const {
+    data: ingredientsData,
+    isLoading: ingredientsLoading,
+    isError: ingredientsError,
+    refetch: refetchIngredients,
+  } = useIngredients({
     page,
     search,
   });
 
-  const ingredients = data?.data ?? [];
+  const {
+    data: allergiesData,
+    isLoading: allergiesLoading,
+    isError: allergiesError,
+    refetch: refetchAllergies,
+  } = useAllergies({
+    page,
+    search,
+  });
+
+  const ingredients = ingredientsData?.data ?? [];
+  const allergies = allergiesData?.data ?? [];
+  const isIngredientsTab = activeTab === "ingredients";
+  const currentData = isIngredientsTab ? ingredientsData : allergiesData;
+  const isLoading = isIngredientsTab ? ingredientsLoading : allergiesLoading;
+  const isError = isIngredientsTab ? ingredientsError : allergiesError;
+  const tableData = isIngredientsTab ? ingredients : allergies;
 
   const openAddModal = () => {
     setModalMode("add");
@@ -42,75 +69,150 @@ const Ingredients = () => {
     try {
       setIsSubmitting(true);
 
-      let dataToSend = form;
-      let headers = {};
+      if (isIngredientsTab) {
+        let dataToSend = form;
+        let headers = {};
 
-      // If we have an image, we must use FormData
-      if (form.image) {
-        const formData = new FormData();
-        formData.append("name", form.name);
-        formData.append("category", form.category);
-        formData.append("default_unit", form.default_unit);
-        formData.append("description", form.description || "");
-        formData.append("image", form.image);
-        if (modalMode !== "add") formData.append("_method", "PUT");
-
-        dataToSend = formData;
-        headers = { "Content-Type": "multipart/form-data" };
-      }
-
-      if (modalMode === "add") {
-        await api.post("/admin/ingredients", dataToSend, { headers });
-      } else {
-        // Use POST with _method=PUT if sending FormData, otherwise standard PUT
         if (form.image) {
-          await api.post(`/admin/ingredients/${selectedItem.id}`, dataToSend, { headers });
+          const formData = new FormData();
+          formData.append("name", form.name);
+          formData.append("category", form.category);
+          formData.append("default_unit", form.default_unit);
+          formData.append("description", form.description || "");
+          formData.append("image", form.image);
+          if (modalMode !== "add") formData.append("_method", "PUT");
+
+          dataToSend = formData;
+          headers = { "Content-Type": "multipart/form-data" };
+        }
+
+        if (modalMode === "add") {
+          await api.post("/admin/ingredients", dataToSend, { headers });
+        } else if (form.image) {
+          await api.post(`/admin/ingredients/${selectedItem.id}`, dataToSend, {
+            headers,
+          });
         } else {
           await api.put(`/admin/ingredients/${selectedItem.id}`, dataToSend);
         }
+      } else {
+        if (modalMode === "add") {
+          await api.post("/admin/allergies", form);
+        } else {
+          await api.put(`/admin/allergies/${selectedItem.id}`, form);
+        }
       }
 
+      showToast({
+        title: "Success",
+        description:
+          modalMode === "add"
+            ? `${isIngredientsTab ? "Ingredient" : "Allergy"} created successfully`
+            : `${isIngredientsTab ? "Ingredient" : "Allergy"} updated successfully`,
+        variant: "success",
+      });
+
       setIsModalOpen(false);
-      refetch();
+      if (isIngredientsTab) {
+        refetchIngredients();
+      } else {
+        refetchAllergies();
+      }
+    } catch (error) {
+      console.error(`Failed to save ${isIngredientsTab ? "ingredient" : "allergy"}`, error);
+      showToast({
+        title: "Error",
+        description:
+          error.response?.data?.message ||
+          `Failed to save ${isIngredientsTab ? "ingredient" : "allergy"}`,
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const openDeleteModal = (row) => {
-    setIngredientToDelete(row);
+    setItemToDelete(row);
     setDeleteModalOpen(true);
   };
 
   const handleDelete = async () => {
-    if (!ingredientToDelete) return;
+    if (!itemToDelete) return;
 
     try {
       setIsDeleting(true);
 
-      await api.delete(`/admin/ingredients/${ingredientToDelete.id}`);
+      if (isIngredientsTab) {
+        await api.delete(`/admin/ingredients/${itemToDelete.id}`);
+      } else {
+        await api.delete(`/admin/allergies/${itemToDelete.id}`);
+      }
 
       setDeleteModalOpen(false);
-      setIngredientToDelete(null);
+      setItemToDelete(null);
 
-      refetch();
+      showToast({
+        title: "Success",
+        description: `${isIngredientsTab ? "Ingredient" : "Allergy"} deleted successfully`,
+        variant: "success",
+      });
+
+      if (isIngredientsTab) {
+        refetchIngredients();
+      } else {
+        refetchAllergies();
+      }
     } catch (err) {
-      console.error("Failed to delete ingredient", err);
+      console.error(`Failed to delete ${isIngredientsTab ? "ingredient" : "allergy"}`, err);
+      showToast({
+        title: "Error",
+        description:
+          err.response?.data?.message ||
+          `Failed to delete ${isIngredientsTab ? "ingredient" : "allergy"}`,
+        variant: "destructive",
+      });
     } finally {
       setIsDeleting(false);
     }
   };
 
-
-  {
-    !isLoading && ingredients.length === 0 && (
-      <p className="text-center text-brand-subtext py-10">
-        No ingredients found.
+  if (isError) {
+    return (
+      <p className="p-10">
+        Failed to load {isIngredientsTab ? "ingredients" : "allergies"}
       </p>
     );
   }
 
-  if (isError) return <p className="p-10">Failed to load Ingredients</p>;
+  const allergyColumns = [
+    {
+      label: "Allergy Name",
+      accessor: "name",
+      className: "font-medium text-brand-cardhead",
+    },
+    {
+      label: "Tags Count",
+      accessor: "tags_count",
+      render: (value) => value ?? 0,
+    },
+    {
+      label: "Tags",
+      accessor: "tags",
+      render: (value) =>
+        Array.isArray(value)
+          ? value
+              .map((tag) => tag?.title || tag?.name || "")
+              .filter(Boolean)
+              .join(", ") || "-"
+          : "-",
+    },
+    {
+      label: "Used In",
+      accessor: "used_in_recipes_count",
+      render: (value) => `${value ?? 0} recipe${value === 1 ? "" : "s"}`,
+    },
+  ];
 
   return (
     <>
@@ -121,71 +223,133 @@ const Ingredients = () => {
               Ingredients Library
             </h2>
             <p className="text-brand-subtext">
-              Ingredients Library Manage reusable Ingredients linked across
-              recipes.
+              Manage reusable ingredients and allergies linked across recipes.
             </p>
           </div>
           <div className="mt-4 md:mt-0 flex flex-col sm:flex-row w-full md:w-auto justify-between items-center gap-4">
-            {/* Search Bar */}
             <div className="relative w-full sm:max-w-md">
               <input
                 type="text"
-                placeholder="Search ingredient..."
+                placeholder={
+                  isIngredientsTab
+                    ? "Search ingredient..."
+                    : "Search allergy..."
+                }
                 value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);
-                  setPage(1); // reset pagination on search
+                  setPage(1);
                 }}
                 className="w-full px-4 py-2 pr-12 border bg-brand-carhead border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand-secondary"
+              />
+              <img
+                src={Search}
+                alt="Search"
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 opacity-60 pointer-events-none"
               />
             </div>
 
             <button
               onClick={openAddModal}
-              className=" cursor-pointer w-full sm:w-auto bg-brand-secondary text-white text-sm sm:text-base px-6 py-2  rounded-2xl font-medium hover:opacity-90 transition whitespace-nowrap"
+              className="cursor-pointer w-full sm:w-auto bg-brand-secondary text-white text-sm sm:text-base px-6 py-2 rounded-2xl font-medium hover:opacity-90 transition whitespace-nowrap"
             >
-              Add Ingredient
+              {isIngredientsTab ? "Add Ingredient" : "Add Allergy"}
             </button>
           </div>
         </div>
-                {isLoading ? (
-          <div className="p-10">
-            <TableSkeleton />
-          </div>
-        ) : (
-          <div className="mt-8">
-            <ReusableTable
-              columns={[
-                {
-                  label: "Ingredient",
-                  accessor: "name",
-                  className: "font-medium text-brand-cardhead",
-                },
-                {
-                  label: "Category",
-                  accessor: "category",
-                },
-                {
-                  label: "Default Unit",
-                  accessor: "default_unit",
-                },
-                {
-                  label: "Used In",
-                  accessor: "recipes_count",
-                  render: (value) => `${value} recipe${value !== 1 ? "s" : ""}`,
-                },
-              ]}
-              data={ingredients}
-              actions="editDelete"
-              onEdit={openEditModal}
-              onDelete={openDeleteModal}
-            />
-          </div>
 
-        )}
+        <Tabs.Root
+          value={activeTab}
+          onValueChange={(value) => {
+            setActiveTab(value);
+            setPage(1);
+            setIsModalOpen(false);
+            setDeleteModalOpen(false);
+            setSelectedItem(null);
+            setItemToDelete(null);
+          }}
+          className="flex flex-col mt-6 px-4 sm:px-10"
+        >
+          <Tabs.List className="flex max-w-sm gap-4">
+            <Tabs.Trigger
+              value="ingredients"
+              className={`flex-1 py-2 rounded-lg font-medium transition ${
+                activeTab === "ingredients"
+                  ? "bg-brand-secondary text-white"
+                  : "bg-transparent border border-brand-planoff text-brand-muted"
+              }`}
+            >
+              Ingredients
+            </Tabs.Trigger>
+
+            <Tabs.Trigger
+              value="allergies"
+              className={`flex-1 py-2 rounded-lg font-medium transition ${
+                activeTab === "allergies"
+                  ? "bg-brand-secondary text-white"
+                  : "bg-transparent border border-brand-planoff text-brand-muted"
+              }`}
+            >
+              Allergies
+            </Tabs.Trigger>
+          </Tabs.List>
+
+          {isLoading ? (
+            <div className="pt-8">
+              <TableSkeleton />
+            </div>
+          ) : tableData.length === 0 ? (
+            <div className="mt-8 text-center text-brand-subtext">
+              No {isIngredientsTab ? "ingredients" : "allergies"} found.
+            </div>
+          ) : (
+            <div className="mt-8">
+              <ReusableTable
+                columns={
+                  isIngredientsTab
+                    ? [
+                        {
+                          label: "Ingredient",
+                          accessor: "name",
+                          className: "font-medium text-brand-cardhead",
+                        },
+                        {
+                          label: "Category",
+                          accessor: "category",
+                        },
+                        {
+                          label: "Default Unit",
+                          accessor: "default_unit",
+                        },
+                        {
+                          label: "Used In",
+                          accessor: "recipes_count",
+                          render: (value) =>
+                            `${value ?? 0} recipe${value === 1 ? "" : "s"}`,
+                        },
+                      ]
+                    : allergyColumns
+                }
+                data={tableData}
+                actions="editDelete"
+                onEdit={openEditModal}
+                onDelete={openDeleteModal}
+              />
+            </div>
+          )}
+        </Tabs.Root>
 
         <IngredientModal
-          open={isModalOpen}
+          open={isIngredientsTab && isModalOpen}
+          mode={modalMode}
+          initialValues={selectedItem}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleSubmit}
+          loading={isSubmitting}
+        />
+
+        <AllergyModal
+          open={!isIngredientsTab && isModalOpen}
           mode={modalMode}
           initialValues={selectedItem}
           onClose={() => setIsModalOpen(false)}
@@ -198,21 +362,23 @@ const Ingredients = () => {
           onClose={() => !isDeleting && setDeleteModalOpen(false)}
           onConfirm={handleDelete}
           loading={isDeleting}
-          title={"Delete Ingredient"}
+          title={isIngredientsTab ? "Delete Ingredient" : "Delete Allergy"}
           subtext={
-            "Are you certain you want to delete this ingredient? Once removed, it will no longer appear in any recipes it was associated with."
+            isIngredientsTab
+              ? "Are you certain you want to delete this ingredient? Once removed, it will no longer appear in any recipes it was associated with."
+              : "Are you certain you want to delete this allergy? Once removed, recipes and related ingredient mappings will no longer reference it."
           }
-          actionBtn={"Yes, Remove"}
+          actionBtn={isIngredientsTab ? "Yes, Remove" : "Delete Allergy"}
         />
       </section>
 
-      {data && (
+      {currentData && (
         <PaginationFooter
-          currentPage={data.current_page}
-          lastPage={data.last_page}
+          currentPage={currentData.current_page}
+          lastPage={currentData.last_page}
           onPageChange={(page) => setPage(page)}
           onPrev={() => setPage((p) => Math.max(p - 1, 1))}
-          onNext={() => setPage((p) => Math.min(p + 1, data.last_page))}
+          onNext={() => setPage((p) => Math.min(p + 1, currentData.last_page))}
         />
       )}
     </>
