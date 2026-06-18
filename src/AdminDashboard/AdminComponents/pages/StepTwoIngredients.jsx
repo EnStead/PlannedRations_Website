@@ -92,10 +92,35 @@ const StepTwoIngredients = ({
   useEffect(() => {
     const fetchIngredients = async () => {
       try {
-        const res = await api.get("/list-ingredient");
-        setAvailableIngredients(res.data.data || []);
+        const firstRes = await api.get("/list-ingredient");
+        const firstPageData = firstRes.data?.data;
+        const firstPageIngredients = Array.isArray(firstPageData?.data)
+          ? firstPageData.data
+          : [];
+        const lastPage = Number(firstPageData?.last_page) || 1;
+
+        if (lastPage <= 1) {
+          setAvailableIngredients(firstPageIngredients);
+          return;
+        }
+
+        const pageRequests = [];
+        for (let page = 2; page <= lastPage; page += 1) {
+          pageRequests.push(api.get("/list-ingredient", { params: { page } }));
+        }
+
+        const paginatedResponses = await Promise.all(pageRequests);
+        const paginatedIngredients = paginatedResponses.flatMap((response) =>
+          Array.isArray(response.data?.data?.data) ? response.data.data.data : [],
+        );
+
+        setAvailableIngredients([
+          ...firstPageIngredients,
+          ...paginatedIngredients,
+        ]);
       } catch (err) {
         console.error("Failed to fetch ingredients", err);
+        setAvailableIngredients([]);
       }
     };
     fetchIngredients();
@@ -207,6 +232,8 @@ const StepTwoIngredients = ({
                 options={availableIngredients.map((i) => i.name)}
                 value={ingredient.name}
                 onChange={(val) => updateIngredient(index, "name", val)}
+                searchable
+                searchPlaceholder="Search ingredients..."
                 classNameLabel={
                   ingredient.name ? "text-brand-primary" : "text-brand-cartext"
                 }
