@@ -18,8 +18,7 @@ const AddRecipes = () => {
   const [step, setStep] = useState(1);
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(!!id);
-
-  const [recipeData, setRecipeData] = useState({
+  const defaultRecipeData = {
     name: "",
     description: "",
     tags: [],
@@ -32,7 +31,9 @@ const AddRecipes = () => {
     nutrition: [],
     ingredients: [],
     steps: [],
-  });
+  };
+
+  const [recipeData, setRecipeData] = useState(defaultRecipeData);
 
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -121,20 +122,7 @@ const AddRecipes = () => {
       };
       fetchRecipe();
     } else {
-      setRecipeData({
-        name: "",
-        description: "",
-        tags: [],
-        cuisine: "",
-        diet_type: [],
-        base_servings: "",
-        calories: "",
-        cooking_time: "",
-        difficulty: "",
-        nutrition: [],
-        ingredients: [],
-        steps: [],
-      });
+      setRecipeData(defaultRecipeData);
       setImageFile(null);
       setImagePreview(null);
       setStep(1);
@@ -144,15 +132,15 @@ const AddRecipes = () => {
   // Function to check if any field has input
   const hasUnsavedData = () => {
     return (
-      recipeData.name ||
-      recipeData.description ||
+      recipeData.name !== defaultRecipeData.name ||
+      recipeData.description !== defaultRecipeData.description ||
       recipeData.tags.length > 0 ||
-      !!recipeData.cuisine ||
+      recipeData.cuisine !== defaultRecipeData.cuisine ||
       recipeData.diet_type.length > 0 ||
-      recipeData.base_servings ||
-      recipeData.calories ||
-      recipeData.cooking_time ||
-      recipeData.difficulty ||
+      recipeData.base_servings !== defaultRecipeData.base_servings ||
+      recipeData.calories !== defaultRecipeData.calories ||
+      recipeData.cooking_time !== defaultRecipeData.cooking_time ||
+      recipeData.difficulty !== defaultRecipeData.difficulty ||
       recipeData.nutrition.length > 0 ||
       recipeData.ingredients.length > 0 ||
       recipeData.steps.length > 0

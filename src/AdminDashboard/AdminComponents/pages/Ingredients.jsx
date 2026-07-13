@@ -3,6 +3,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import Search from "../../../assets/Search.svg";
 import AllergyModal from "../../../Utility/AllergyModal";
 import IngredientModal from "../../../Utility/IngredientModal";
+import CustomSelect from "../../../Utility/CustomSelect";
 import ReusableTable from "../../../Utility/ReusableTable";
 import { useIngredients } from "../hooks/useIngredients";
 import { useAllergies } from "../hooks/useAllergies";
@@ -13,8 +14,18 @@ import { useDashboard } from "../../Context/DashboardContext";
 import DeleteConfirmModal from "../../../Utility/DeleteConfirmModal";
 import { useToast } from "../../Context/ToastProvider";
 
+const SORT_OPTIONS = [
+  "default",
+  "name:asc",
+  "name:desc",
+  "created_at:desc",
+  "created_at:asc",
+];
+
 const Ingredients = () => {
   const [activeTab, setActiveTab] = useState("ingredients");
+  const [sortBy, setSortBy] = useState("");
+  const [sortDirection, setSortDirection] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
   const [selectedItem, setSelectedItem] = useState(null);
@@ -33,6 +44,9 @@ const Ingredients = () => {
   } = useIngredients({
     page,
     search,
+    sortBy,
+    sortDirection,
+    perPage: 10,
   });
 
   const {
@@ -47,6 +61,8 @@ const Ingredients = () => {
 
   const ingredients = ingredientsData?.data ?? [];
   const allergies = allergiesData?.data ?? [];
+  const sortValue =
+    sortBy && sortDirection ? `${sortBy}:${sortDirection}` : "default";
   const isIngredientsTab = activeTab === "ingredients";
   const currentData = isIngredientsTab ? ingredientsData : allergiesData;
   const isLoading = isIngredientsTab ? ingredientsLoading : allergiesLoading;
@@ -214,6 +230,37 @@ const Ingredients = () => {
     },
   ];
 
+  const formatSortOption = (value) => {
+    switch (value) {
+      case "default":
+        return "Default Order";
+      case "name:asc":
+        return "Name (A-Z)";
+      case "name:desc":
+        return "Name (Z-A)";
+      case "created_at:desc":
+        return "Recent";
+      case "created_at:asc":
+        return "Oldest";
+      default:
+        return value;
+    }
+  };
+
+  const handleSortChange = (value) => {
+    if (value === "default") {
+      setSortBy("");
+      setSortDirection("");
+      setPage(1);
+      return;
+    }
+
+    const [nextSortBy, nextSortDirection] = value.split(":");
+    setSortBy(nextSortBy || "");
+    setSortDirection(nextSortDirection || "");
+    setPage(1);
+  };
+
   return (
     <>
       <section className="bg-brand-background1 min-h-screen py-10 ">
@@ -263,6 +310,8 @@ const Ingredients = () => {
           onValueChange={(value) => {
             setActiveTab(value);
             setPage(1);
+            setSortBy("");
+            setSortDirection("");
             setIsModalOpen(false);
             setDeleteModalOpen(false);
             setSelectedItem(null);
@@ -270,29 +319,48 @@ const Ingredients = () => {
           }}
           className="flex flex-col mt-6 px-4 sm:px-10"
         >
-          <Tabs.List className="flex max-w-sm gap-4">
-            <Tabs.Trigger
-              value="ingredients"
-              className={`flex-1 py-2 rounded-lg font-medium transition ${
-                activeTab === "ingredients"
-                  ? "bg-brand-secondary text-white"
-                  : "bg-transparent border border-brand-planoff text-brand-muted"
-              }`}
-            >
-              Ingredients
-            </Tabs.Trigger>
+          <div className="flex flex-col sm:flex-row justify-between items-center">
+            <Tabs.List className="flex w-full max-w-sm gap-4">
+              <Tabs.Trigger
+                value="ingredients"
+                className={`flex-1 py-2 rounded-lg font-medium transition ${
+                  activeTab === "ingredients"
+                    ? "bg-brand-secondary text-white"
+                    : "bg-transparent border border-brand-planoff text-brand-muted"
+                }`}
+              >
+                Ingredients
+              </Tabs.Trigger>
 
-            <Tabs.Trigger
-              value="allergies"
-              className={`flex-1 py-2 rounded-lg font-medium transition ${
-                activeTab === "allergies"
-                  ? "bg-brand-secondary text-white"
-                  : "bg-transparent border border-brand-planoff text-brand-muted"
-              }`}
-            >
-              Allergies
-            </Tabs.Trigger>
-          </Tabs.List>
+              <Tabs.Trigger
+                value="allergies"
+                className={`flex-1 py-2 rounded-lg font-medium transition ${
+                  activeTab === "allergies"
+                    ? "bg-brand-secondary text-white"
+                    : "bg-transparent border border-brand-planoff text-brand-muted"
+                }`}
+              >
+                Allergies
+              </Tabs.Trigger>
+            </Tabs.List>
+
+            {isIngredientsTab && (
+              <div className="mt-4 flex justify-start sm:justify-end">
+                <div className="w-full sm:w-64">
+                  <CustomSelect
+                    label="Sort By"
+                    options={SORT_OPTIONS}
+                    value={sortValue}
+                    onChange={handleSortChange}
+                    formatOption={formatSortOption}
+                    classNameLabel="text-brand-cartext"
+                    classNameSelect="border-brand-planoff"
+                  />
+                </div>
+              </div>
+            )}
+
+          </div>
 
           {isLoading ? (
             <div className="pt-8">

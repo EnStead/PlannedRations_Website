@@ -6,6 +6,7 @@ import api from "../../../Utility/api";
 import * as Tabs from "@radix-ui/react-tabs";
 import ReusableTable from "../../../Utility/ReusableTable";
 import PaginationFooter from "./PaginationFooter";
+import CustomSelect from "../../../Utility/CustomSelect";
 import RecipeDetailsSlideModal from "./RecipeDetailsSlideModal";
 import DeleteConfirmModal from "../../../Utility/DeleteConfirmModal";
 import PublishConfirmModal from "../../../Utility/PublishConfirmModal";
@@ -13,8 +14,18 @@ import UnpublishConfirmModal from "../../../Utility/UnpublishConfirmModal";
 import { useDashboard } from "../../Context/DashboardContext";
 import TableSkeleton from "../../../Utility/skeletons/TableSkeleton";
 
+const SORT_OPTIONS = [
+  "default",
+  "name:asc",
+  "name:desc",
+  "created_at:desc",
+  "created_at:asc",
+];
+
 const Recipes = () => {
   const [activeTab, setActiveTab] = useState("published");
+  const [sortBy, setSortBy] = useState("");
+  const [sortDirection, setSortDirection] = useState("");
   const { page, setPage, search, setSearch } = useDashboard();
   const navigate = useNavigate();
   const { showToast } = useToast();
@@ -38,9 +49,14 @@ const Recipes = () => {
     tab: activeTab,
     page,
     search,
+    sortBy,
+    sortDirection,
+    perPage: 10,
   });
 
   const recipes = data?.data ?? [];
+  const sortValue =
+    sortBy && sortDirection ? `${sortBy}:${sortDirection}` : "default";
 
   // --- API functions ---
   const handlePublish = async () => {
@@ -172,6 +188,37 @@ const Recipes = () => {
     }).format(date);
   };
 
+  const formatSortOption = (value) => {
+    switch (value) {
+      case "default":
+        return "Default Order";
+      case "name:asc":
+        return "Name (A-Z)";
+      case "name:desc":
+        return "Name (Z-A)";
+      case "created_at:desc":
+        return "Recent";
+      case "created_at:asc":
+        return "Oldest";
+      default:
+        return value;
+    }
+  };
+
+  const handleSortChange = (value) => {
+    if (value === "default") {
+      setSortBy("");
+      setSortDirection("");
+      setPage(1);
+      return;
+    }
+
+    const [nextSortBy, nextSortDirection] = value.split(":");
+    setSortBy(nextSortBy || "");
+    setSortDirection(nextSortDirection || "");
+    setPage(1);
+  };
+
   return (
     <>
       <section className="bg-brand-background1 min-h-screen py-10">
@@ -209,36 +256,55 @@ const Recipes = () => {
         </div>
 
         <Tabs.Root
-          defaultValue="published"
+          value={activeTab}
           onValueChange={(value) => {
             setActiveTab(value);
             setPage(1); // reset page when tab changes
+            setSortBy("");
+            setSortDirection("");
           }}
-          className="flex flex-col mt-6 px-4 sm:px-0"
+          className="flex flex-col mt-6 px-4 sm:px-10"
         >
-          <Tabs.List className="flex max-w-md gap-4 sm:pl-10">
-            <Tabs.Trigger
-              value="published"
-              className={`flex-1 py-2 rounded-lg font-medium transition ${
-                activeTab === "published"
-                  ? "bg-brand-secondary text-white"
-                  : "bg-transparent border border-brand-planoff text-brand-muted"
-              }`}
-            >
-              Published
-            </Tabs.Trigger>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <Tabs.List className="flex w-full max-w-sm gap-4">
+              <Tabs.Trigger
+                value="published"
+                className={`flex-1 py-2 rounded-lg font-medium transition ${
+                  activeTab === "published"
+                    ? "bg-brand-secondary text-white"
+                    : "bg-transparent border border-brand-planoff text-brand-muted"
+                }`}
+              >
+                Published
+              </Tabs.Trigger>
 
-            <Tabs.Trigger
-              value="drafts"
-              className={`flex-1 py-2 rounded-lg font-medium transition ${
-                activeTab === "drafts"
-                  ? "bg-brand-secondary text-white"
-                  : "bg-transparent border border-brand-planoff text-brand-muted"
-              }`}
-            >
-              My Drafts
-            </Tabs.Trigger>
-          </Tabs.List>
+              <Tabs.Trigger
+                value="drafts"
+                className={`flex-1 py-2 rounded-lg font-medium transition ${
+                  activeTab === "drafts"
+                    ? "bg-brand-secondary text-white"
+                    : "bg-transparent border border-brand-planoff text-brand-muted"
+                }`}
+              >
+                My Drafts
+              </Tabs.Trigger>
+            </Tabs.List>
+
+            <div className="w-full sm:w-auto flex justify-end">
+              <div className="w-full sm:w-64">
+                <CustomSelect
+                  label="Sort By"
+                  options={SORT_OPTIONS}
+                  value={sortValue}
+                  onChange={handleSortChange}
+                  formatOption={formatSortOption}
+                  classNameLabel="text-brand-cartext"
+                  classNameSelect="border-brand-planoff"
+                />
+              </div>
+            </div>
+
+          </div>
 
           {isLoading ? (
             <TableSkeleton/>

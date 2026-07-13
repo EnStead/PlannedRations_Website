@@ -1,9 +1,17 @@
-const PaginationFooter = ({ page, lastPage, onPrev, onNext }) => {
+const PaginationFooter = ({
+  page,
+  currentPage,
+  lastPage,
+  onPrev,
+  onNext,
+}) => {
+  const activePage = currentPage ?? page ?? 1;
+
   return (
     <div className="flex items-center justify-between px-10 py-3 border-brand-planoff border-t bg-white">
       {/* Left */}
       <p className="text-sm text-brand-subtext">
-        Page <span className="font-medium">{page}</span> of{" "}
+        Page <span className="font-medium">{activePage}</span> of{" "}
         <span className="font-medium">{lastPage}</span>
       </p>
 
@@ -11,7 +19,7 @@ const PaginationFooter = ({ page, lastPage, onPrev, onNext }) => {
       <div className="flex gap-3">
         <button
           onClick={onPrev}
-          disabled={page === 1}
+          disabled={activePage === 1}
           className="px-4 py-2 rounded-xl border text-sm disabled:opacity-40 hover:bg-gray-50"
         >
           Previous
@@ -19,7 +27,7 @@ const PaginationFooter = ({ page, lastPage, onPrev, onNext }) => {
 
         <button
           onClick={onNext}
-          disabled={page === lastPage}
+          disabled={activePage === lastPage}
           className="px-4 py-2 rounded-xl bg-brand-secondary text-white text-sm disabled:opacity-40"
         >
           Next
